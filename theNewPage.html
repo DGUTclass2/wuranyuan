@@ -1,0 +1,578 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+	<title>环境监管</title>
+<!-- 	<script type="text/javascript">
+		var storage=window.localStorage;
+			if(storage.getItem("userId")==null)
+				window.location.href="login.html";
+			</script> -->
+			<script src="js/newPage.js"></script>
+			<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+			<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+			<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Gm7uy71EWAxRo2qhcaBPGl7tKoVv9eXR"></script> 
+			<link rel="stylesheet" href="css/survey.css">
+		</head>
+		<body>
+			<div id="apped">
+				<div class="surveyBar">
+					<div>
+						<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+						<span>东莞市工业污染源环境辅助监管信息系统</span>
+					</div>
+				</div>
+				<div class="pullution_nav">
+					填写公司信息
+				</div>
+				<div>
+					<!-- 新增部分 -->
+					<div class="surveyItem">
+						<span class="red">*</span>清查人员编号
+						<input type="text" class="surveyInput" ref="userNo" v-model="re_userNo" readonly>
+						<span ref="userNoSpan" class="surveyTip"></span><br>
+					</div>
+					<div class="surveyItem">
+						<span class="red">*</span>细分区域
+						<input type="text" class="surveyInput" ref="subdivisionArea" v-model="re_subdivisionArea">
+						<span ref="subdivisionAreaSpan" class="surveyTip"></span><br>
+						<span class="surveyTip">格式：3-1-2，Day(天)-大区域-小区域</span>
+					</div>
+					<div class="surveyItem">
+						<span class="red">*</span>作战单元
+						<input type="text" class="surveyInput" ref="fightUnit" v-model="re_fightUnit">
+						<span ref="fightUnitSpan" class="surveyTip"></span>
+					</div>
+					<!-- 新增部分 -->
+
+					<div class="surveyItem">
+						<span class="red">*</span>镇街
+						<select name="town" ref="town" class="surveySelect" v-model="re_town" @change="postCommunity()">
+							<option value=""></option>
+							<option v-bind:value="town.name" v-for="town in towns">{{town.name}}</option>
+						</select>
+						<span ref="townSpan" class="surveyTip"></span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>村/社区：
+						<select name="" ref="community" class="surveySelect"  v-model="re_community">
+							<option value=""></option>
+							<option v-bind:value="community.name" v-for="community in communities">{{community.name}}</option>
+						</select>
+						<span ref="communitySpan" class="surveyTip"></span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>地址
+						<input type="text" class="surveyInput" ref="address" name="address" v-model="re_address">
+						<span ref="addressSpan" class="surveyTip"></span><br>
+						<span class="surveyTip">XX路XX号</span>
+					</div>
+
+					<div class="surveyItem">
+						<div class="surveyLocation">
+							<div class="surveyButton" id="getLocation" @click="getLocation1()">定位</div>
+							<span>经度：
+								<input type="text" readonly class="lngAndlat" id="lngAndlat1" name="longitude">
+							</span>
+							<span>纬度：
+								<input type="text" readonly class="lngAndlat" id="lngAndlat2" name="latitude" >
+							</span>
+							<span ref="locationSpan" class="surveyTip"></span>
+						</div>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>企业名称
+						<input type="text" class="surveyInput" ref="name"  name="name" v-model="re_name">
+						<span ref="nameSpan" class="surveyTip"></span><br>
+						<span class="surveyTip" ref="enterpriseSpan"></span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>法定代表人/经营者:
+						<input type="text" placeholder="姓名" class="surveyInput" name="legalRepresentative" ref="legalRepresentative" v-model="re_legalRepresentative">
+						<span class="surveyTip" ref="legalRepresentativeSpan"></span><br>
+
+						<input type="text" placeholder="联系电话" class="surveyInput" name="legalRePhone" ref="leReIpone" v-model="re_legalRePhone">
+						<span class="surveyTip" ref="leReIponeSpan"></span><br>
+						<span class="surveyTip">联系电话为11位手机号码，或769xxxxxxxx固话形式</span>
+					</div>
+
+					<div class="surveyItem">
+
+						<span class="red">*</span>环保负责人:
+						<div @click="theReSame()" class="synchronization">同法定联系人姓名和电话</div>
+						<input type="text" placeholder="姓名" class="surveyInput" name="envirRepresentative" ref="envirRepresentative" v-model="re_envirRepresentative">
+						<span class="surveyTip" ref="envirRepresentativeSpanSpan"></span><br>
+						<input type="text" placeholder="联系电话" class="surveyInput" name="envirRePhone" ref="envirRePhone" v-model="re_envirRePhone">
+						<span class="surveyTip" ref="envirRePhoneSpan"></span><br>
+						<span class="surveyTip">联系电话为11位手机号码，或769xxxxxxxx固话形式</span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>营业执照:
+						<input type="radio" class="surveyRadio BusiLicense" value="0" v-model="re_hasLicence" ref="hasLicence">无 
+						<input type="radio" class="surveyRadio BusiLicense" value="1" v-model="re_hasLicence">有
+						<br><span class="surveyTip" ref="hasLicenceSpan"></span>
+					</div>
+					
+					<div class="surveyItem">
+						<span class="red">*</span>环保手续:
+						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOff" value="无环保手续"  v-model="envirProcedures">无 
+						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOn" value="有环保手续" v-model="envirProcedures">有
+						<!-- 审批和验收,增加判定 -->
+						<div id="examine" class="itemHidden">
+							<select name="envirProcedures"  class="surveySelect " v-model="re_envirProcedures">
+								<option value=""></option>
+								<option hidden="hidden" value="0">无</option>
+								<option value="1">已审批已验收</option>
+								<option value="2">已审批未验收</option>
+								<option value="3">已登记备案</option>
+								<option value="4">其他</option>
+							</select>
+							<input type="text" placeholder="" class="surveyInput" v-model="re_otherEnvirProcedures">
+							<span class="surveyTip">当环保手续选择其他时，需填写此项</span>
+						</div>
+					</div>
+					
+					<div class="surveyItem">
+						<span class="red">*</span>行业类型
+						<select name="tradeType" class="surveySelect" v-model="re_tradeType">
+							<option value=""></option>
+							<option v-bind:value="item.no" v-for="item in industries">{{item.name}}</option>
+						</select>
+						<span ref="tradeTypeSpan" class="surveyTip"></span>
+
+						<!-- 修改部分 -->
+						其他行业类型
+						<input type="text" class="surveyInput" v-model="re_otherTradeType">
+						<span ref="otherTradeTypeSpan" class="surveyTip"></span><br>
+						<span class="surveyTip">当行业类型选择其他时，需填写此项</span>
+					</div>
+
+					<!-- 修改部分 -->					
+					<div class="surveyItem">
+						<span class="red">*</span>排污许可证：
+						<select name="sewagePermit" class="surveySelect"  v-model="re_sewagePermit" >
+							<option value=""></option>
+							<option value="0">已领取国家排污许可证</option>
+							<option value="1">已领取省排污许可证</option>
+							<option value="-1">未领取</option>
+						</select>
+						<span ref="sewagePermitSpan" class="surveyTip"></span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>环境应急预案：
+						<select name="" id="record" class="surveySelect" v-model="re_emergencyPlan">
+							<option value=""></option>
+							<option value="1">已备案-已过期</option>
+							<option value="2">已备案-未过期</option>
+							<option value="0">未备案</option>
+							<option value="-1">无编制</option>
+						</select>
+						<span ref="emergencyPlanSpan" class="surveyTip"></span>
+					</div>
+				</div>
+				<!-- 布局空块 -->
+				<div style="height: 30px;"></div>
+				<div class="pullution_nav">填写污染源</div>
+
+				<div class="body">
+					<div class="surveyItem">
+						<span class="red">*</span>排查对象范围：
+						<select name="tag" id="tags" class="surveySelect" v-model="re_tag">
+							<option value=""></option>	
+							<option v-bind:value="item.id" v-for="item in tags" >{{item.name}}</option>
+						</select>
+						<input type="text" v-model="re_otherTag" class="surveyInput" ref="otherTag">
+						<span class="surveyTip">当排查对象范围选择其他时，需填写此项</span>
+					</div>
+
+					<div class="surveyItem">
+						<span class="red">*</span>生产状况：
+						<select id="" class="surveySelect" v-model="re_productCondition">
+							<option value=""></option>	
+							<option v-bind:value="item.id" v-for="item in ProductConditions" >{{item.name}}</option>
+						</select>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title">
+							污染源类型（可多选）<span id="item1Span"></span>
+						</div>
+						<div id="item1"  class="hidden_item">
+							<div class="pullutionMchild">
+								<label>
+									<input type="checkbox" class="item1_in" value="不涉及" v-model="re_pollutionType">不涉及
+								</label>
+								<span style="margin-right:50px"></span>
+								<label>
+									<input type="checkbox" class="item1_in"  value="涉水" v-model="re_pollutionType">涉水
+								</label>
+								<span style="margin-right:50px"></span>
+								<label>
+									<input type="checkbox" class="item1_in" value="涉气" v-model="re_pollutionType">涉气
+								</label>
+							</div>
+							<div class="pullutionMchild" style="text-align: center;">
+								<label>
+									<input type="checkbox" class="item1_in" value="涉噪音" v-model="re_pollutionType">涉噪音
+								</label>
+								<span style="margin-right:50px"></span>
+								<label>
+									<input type="checkbox" class="item1_in" value="涉危废" v-model="re_pollutionType">涉危废
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title" >产品类型（可多选）<span id="item2Span"></span></div>
+						<div id="item2" class="hidden_item">
+							<div class="pullutionMchild"  v-for="item in products">
+								<!-- 选项不为其他的情况 -->
+								<div v-if="item.name!=='其他'" style="width: 120px;height: 20px">
+									<label>
+										<input type="checkbox" v-bind:value="item.name" class="item2_in CheckBoxitem" v-model="re_productType">{{item.name}}
+									</label>
+								</div>
+								<!-- 选项为其他的情况 -->
+								<div>
+									<div v-if="item.name==='其他'">
+										<label>
+											<input type="checkbox" v-bind:value="item.name" class="item2_in CheckBoxitem" v-model="re_productType">{{item.name}}
+										</label>	
+										<input type="text" id="item2_input" v-model="re_otherProductType">
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title">主要生产工艺（可多选)<span id="item3Span"></span></div>
+						<div id="item3"  class="hidden_item">
+							<div v-if="item.name!=='其他'" class="pullutionMchild"  v-for="item in technologys">
+								<div style="width: 120px;height: 20px">
+									<label>
+										<input type="checkbox" v-bind:value="item.name" class="item3_in CheckBoxitem" v-model="re_technology">{{item.name}}
+									</label>
+								</div>
+							</div>
+							<div v-if="item.name==='其他'" class="pullutionMchild"  v-for="item in technologys">
+								<div>
+									<label>
+										<input type="checkbox" v-bind:value="item.name" class="item3_in CheckBoxitem" v-model="re_technology">{{item.name}}
+									</label>
+									<input type="text" id="item3_input" v-model="re_otherTechnology">
+								</div>
+
+							</div>
+							
+						</div>
+					</div>
+
+					<div class="pullutionMitem" id="item4_div">
+						<div class="pullution_title">废水处理情况：<span id="item4Span"></span></div>
+						<div id="item4"  class="hidden_item">
+							<div class="pullutionMchild">
+								<!-- <input type="radio" class="item4_in" value="无" hidden checked> -->
+								<label>
+									<input type="radio" class="item4_in CheckBoxitem" value="0" v-model="re_wastewaterTreatment">自建污水处理设施
+								</label>
+							</div>
+							<div  class="pullutionMchild">
+								<label>
+									<input type="radio" class="item4_in CheckBoxitem" value="1" v-model="re_wastewaterTreatment">转移处理
+								</label>
+								<div>
+									<span>接收单位：</span><input type="text" id="item4_input" v-model="re_waterAcceptComp">
+								</div>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" class="item4_in CheckBoxitem" value="-1" v-model="re_wastewaterTreatment">未处理直接排放
+								</label>
+							</div>
+							<div  class="pullutionMchild">
+								<label>
+									<input type="radio" class="item4_in CheckBoxitem" value="" v-model="re_wastewaterTreatment">其他
+								</label>
+								<div>
+									<span>处理方式：</span><input type="text" id="item4_input" v-model="re_otherWastewaterTreatment">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem" id="item5_div">
+						<div class="pullution_title" >
+							废气类型（可多选）<span id="item5Span"></span><span style="margin-left:60px">处理情况</span>
+						</div>
+						<div id="item5" class="hidden_item">
+							<!-- <input type="checkbox" class="item5_in" value="无" hidden checked> -->
+							<div v-if="item.name!=='其他'" class="pullutionMchild" v-for="(item,index) in wasteGases" ref="gasType">
+								<label class="gasType">
+									<input type="checkbox" v-bind:value="item.name" class="item5_in CheckBoxitem" v-model="re_exhaustGasType">{{item.name}}
+								</label>
+								<span>(
+									<label><input type="radio" :name="'gas['+index+'].name'" class="gasRadio" >未处理</label>
+									<label><input type="radio" :name="'gas['+index+'].name'" class="gasRadio" >已处理</label>
+								</span> )
+							</div>
+							<div v-if="item.name==='其他'" class="pullutionMchild" v-for="(item,index) in wasteGases">
+								<label class="gasCheck">
+									<input type="checkbox" v-bind:value="item.name" class="item5_in CheckBoxitem" v-model="re_exhaustGasType">{{item.name}}
+								</label>
+								<input type="text" id="item5_input" v-model="re_otherExhaustGasType">
+							</div>
+							
+						</div>
+					</div>
+
+					<div class="pullutionMitem" id="item7_div">
+						<div class="pullution_title">
+							危险废物贮存情况<span id="item7Span"></span>
+						</div>
+						<div id="item7" class="hidden_item">
+							<div class="pullutionMchild">
+								<!-- <input type="checkbox" class="item7_in CheckBoxitem" value="无" hidden checked > -->
+								<label>
+									<input type="radio" value="0" class="CheckBoxitem item7_in"  v-model="re_hazardousWasteStorage" name="guifan">不规范
+								</label>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="1" name="guifan" class="item7_in CheckBoxitem" v-model="re_hazardousWasteStorage">规范
+								</label>
+							</div>
+						</div>
+					</div>
+					
+					<div class="pullutionMitem" id="item8_div">
+						<div class="pullution_title">
+							危险废物合同签订<span id="item8Span"></span>
+						</div>
+						<div id="item8" class="hidden_item">
+							<div class="pullutionMchild">
+								<!-- <input type="checkbox" class="item8_in CheckBoxitem" value="无" hidden checked> -->
+								<label>
+									<input type="radio" value="0" name="guoqi" class="item8_in_radio" v-model="re_hazardousStorageSign">已签订-已过期
+								</label><br>
+								<label>
+									<input type="radio" value="1" name="guoqi" class="item8_in_radio"  v-model="re_hazardousStorageSign">已签订-未过期
+								</label><br>
+								<label>
+									<input type="radio" value="-1" name="guoqi" class="item8_in" v-model="re_hazardousStorageSign">未签订
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem" id="item9_div">
+						<div class="pullution_title">
+							危险废物转移情况<span id="item9Span"></span>
+						</div>
+						<div id="item9" class="hidden_item">
+							<div class="pullutionMchild">
+								<!-- <input type="checkbox" class="item9_in" value="无" hidden checked> -->
+								<label>
+									<input type="radio" value="0" name="turnTransfer" class="item9_in" v-model="re_hazardousWasteTransfer">不规范
+								</label>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="1" name="turnTransfer" class="item9_in" v-model="re_hazardousWasteTransfer">规范
+								</label>
+								<div>
+									接收单位：<span id="item9ChildSpan"></span>
+									<input type="text" id="item9_input" v-model="re_hazardousAcceptComp">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title">
+							处理情况<span id="item10Span"></span>
+						</div>
+						<div id="item10" class="hidden_item">
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="-1" class="item10_in" v-model="re_treat">现场查处
+								</label>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="现场查处" class="item10_in" v-model="re_treat">建议立案
+								</label>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="0" class="item10_in" v-model="re_treat">跟踪处理
+								</label>
+							</div>
+							<div class="pullutionMchild">
+								<label>
+									<input type="radio" value="1" class="item10_in" v-model="re_treat">不需处理
+								</label>
+							</div>
+							<div class="pullution_textarea" ref="problemTextarea" >
+								<textarea name="" id="pollutionProblem" rows="5" placeholder="存在问题和处理建议（如勾选“上报执法”或“跟踪整改”，此处必填；如勾选“不需处理”，此处不填。）" v-model="re_problem"></textarea>
+										<!-- <div class="problemTip" onclick="setProblem('废气设施需清洗,')">废气设施需清洗</div>
+										<div class="problemTip" onclick="setProblem('污水排放不合格,')">污水排放不合格</div>
+										<div class="problemTip" onclick="setProblem('危废接受单位不合格,')">危废接受单位不合格</div> -->
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div style="height: 30px;"></div>
+
+						<div class="pullution_nav">
+							现场及人员信息	
+						</div>
+						<div class="surveyItem" >
+							<form id="picForm">
+								<p><span class="red">*</span>现场照片：</p>
+								<!-- 
+								<p >1、厂门口照片（必须上传）：</p>
+								<input type="file" name="imageList" id="fieldFile1" class="surveyInput" accept="image/*"  ref="file1"><br>
+								<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+								<p >2、污染工艺照片：</p>
+								<input type="file" name="imageList" id="fieldFile2" class="surveyInput" accept="image/*"   ref="file2"><br>
+								<div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+								<p >3、污染防治设施照片：</p>
+								<input type="file" name="imageList" id="fieldFile3" class="surveyInput" accept="image/*"   ref="file3"><br>
+								<div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+								<p>4、排放口照片：</p>
+								<input type="file" name="imageList" id="fieldFile4" class="surveyInput" accept="image/*"   ref="file4"><br>
+								<div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+								<p>5、营业执照照片：</p>
+								<input type="file" name="imageList" id="fieldFile5" class="surveyInput" accept="image/*"  ref="file5"><br>
+								<div style="text-align: center;"><img src="" alt="" id="view5" class="fieldImage"></div> -->
+								<p >1、厂门口照片（必须上传）：</p>
+
+								<div v-for="(list,index) in lists" :key="list.fileName">
+									<span class="fileItem">
+										<input type="file" id="" accept="image/*" ref="file1" class="fileUpload" @change="showImage(fileId(index),viewId(index))">
+									</span><hr>
+									<div style="text-align: center;"><img src="" alt="" :id="viewId(index)" class="fieldImage"></div>
+								</div>
+
+								<p >2、营业执照照片：(若无营业执照时，不需上传；否则必须上传)</p>
+								<div v-for="(list,index) in lists" :key="list.fileName">
+									<span class="fileItem">
+										<input type="file" :id="fileId(index)" accept="image/*" ref="file2" class="fileUpload" @change="showImage(fileId(index),viewId(index))">
+										<input type="button" v-on:click="del(index)" value="删除 ">
+									</span><hr>
+									<div style="text-align: center;"><img src="" alt="" :id="viewId(index)" class="fieldImage"></div>
+								</div>
+								<p >3、污染工艺照片：<input type="button" v-on:click="add" value=" + "></p>
+
+								<div v-for="(list,index) in lists" :key="list.fileName">
+									<span class="fileItem">
+										<input type="file" :id="fileId(index)" accept="image/*" ref="file2" class="fileUpload" @change="showImage(fileId(index),viewId(index))">
+										<input type="button" v-on:click="del(index)" value="删除 ">
+									</span><hr>
+									<div style="text-align: center;"><img src="" alt="" :id="viewId(index)" class="fieldImage"></div>
+								</div>
+
+								<p >4、污染防治设施照片：<input type="button" v-on:click="add" value=" + "></p>
+								<div v-for="(list,index) in lists" :key="list.fileName">
+									<span class="fileItem">
+										<input type="file" :id="fileId(index)" accept="image/*" ref="file2" class="fileUpload" @change="showImage(fileId(index),viewId(index))">
+										<input type="button" v-on:click="del(index)" value="删除 ">
+									</span><hr>
+									<div style="text-align: center;"><img src="" alt="" :id="viewId(index)" class="fieldImage"></div>
+								</div>
+
+								<p >5、排放口照片：<input type="button" v-on:click="add" value=" + "></p>
+								<div v-for="(list,index) in lists" :key="list.fileName">
+									<span class="fileItem">
+										<input type="file" :id="fileId(index)" accept="image/*" ref="file2" class="fileUpload" @change="showImage(fileId(index),viewId(index))">
+										<input type="button" v-on:click="del(index)" value="删除 ">
+									</span><hr>
+									<div style="text-align: center;"><img src="" alt="" :id="viewId(index)" class="fieldImage"></div>
+								</div>
+							</form>
+
+						</div>
+
+						<div class="surveyItem">
+							<span class="red">*</span>检查时间：
+							<input type="date" id="verifyTime" v-model="re_checkDate">
+						</div>
+
+						<div class="surveyItem" >
+							定向核查人员：
+							<input type="text" class="surveyInput" v-model="re_auditor">
+							排查人员1：
+							<input type="text" class="surveyInput" id="cPerson1" v-model="re_inspector1" readonly>
+							排查人员2：
+							<input type="text" class="surveyInput" id="cPerson2" v-model="re_inspector2">
+							排查人员3：
+							<input type="text" class="surveyInput" id="cPerson3" v-model="re_inspector3">
+							排查人员4：
+							<input type="text" class="surveyInput" id="cPerson4" v-model="re_inspector4">
+						</div>
+
+						<div style="height: 30px;"></div>
+						<div style="text-align: center;">
+							<button  class="pullution_button" id="pollutionSubmit" @click="checkItem()">
+								提交
+							</button>
+						</div>
+
+
+					</div>
+					<div style="height: 100px;"></div>
+
+					<script>
+						
+					</script>
+				</body>
+				</html>
+<!-- 
+	// 污染源类型
+	pollutionType;
+	// 产品类型
+	productType;
+	otherProductType;
+	// 主要生产工艺
+	technology;
+	otherTechnology;
+	// 废水处理情况
+	wastewaterTreatment;
+	// 接受单位
+	waterAcceptComp;
+	// 废气类型
+	exhaustGasType;
+	otherExhaustGasType;
+	// 废气处理情况
+	wasteGasTreatment;
+	// 危险废物贮存情况
+	hazardousWasteStorage;
+	// 危险废物转移情况
+	hazardousWasteTransfer;
+	// 接受单位
+	hazardousAcceptComp;
+	// 危险废物合同签订
+	hazardousStorageSign;
+	// 存在问题及建议
+	problem;
+	// 处理情况
+	treat;
+	// 排查人员
+	inspector1;
+	inspector2;
+	picture1;
+	picture2;
+	picture3;
+	picture4; -->
