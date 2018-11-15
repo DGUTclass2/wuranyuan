@@ -196,15 +196,17 @@
 							<option value=""></option>	
 							<option v-bind:value="item.id" v-for="item in tags" >{{item.name}}</option>
 						</select>
-						<input type="text" v-model="re_otherTag" class="surveyInput" ref="otherTag">
-						<span class="surveyTip">当排查对象范围选择其他时，需填写此项</span>
+						<div ref="otherTag" class="itemHidden">
+							<input type="text" v-model="re_otherTag" class="surveyInput">
+							<span class="surveyTip">当排查对象范围选择其他时，需填写此项</span>
+						</div>
 					</div>
 
 					<div class="surveyItem">
 						<span class="red">*</span>生产状况：
 						<select id="" class="surveySelect" v-model="re_productCondition">
 							<option value=""></option>	
-							<option v-bind:value="item.id" v-for="item in ProductConditions" >{{item.name}}</option>
+							<option v-bind:value="item.name" v-for="item in ProductConditions" >{{item.name}}</option>
 						</select>
 					</div>
 
