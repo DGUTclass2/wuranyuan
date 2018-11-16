@@ -122,22 +122,19 @@
 					
 					<div class="surveyItem">
 						<span class="red">*</span>环保手续:
-						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOff" value="0"  v-model="envirProcedures">无 
-						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOn" value="1" v-model="envirProcedures">有
+						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOff" value="0"  v-model="tmp_envirProcedures">无 
+						<input type="radio" class="surveyRadio EnvirProdure" id="EnvirProdureOn"  value="1" v-model="tmp_envirProcedures">有
 						<!-- 审批和验收,增加判定 -->
 						<div ref="examine" class="itemHidden">
 							<select name="envirProcedures" ref="envirProcedures" class="surveySelect " v-model="re_envirProcedures">
 								<option value=""></option>
-								<option hidden="hidden" value="">无</option>
 								<option value="已审批已验收">已审批已验收</option>
 								<option value="已审批未验收">已审批未验收</option>
 								<option value="已登记备案">已登记备案</option>
 								<option value="其他">其他</option>
 							</select>
 							<div class="itemHidden" ref="ohterExamine">
-
 								<input type="text" placeholder="" class="surveyInput" v-model="re_otherEnvirProcedures">
-								
 								<span class="surveyTip">当环保手续选择其他时，需填写此项</span><br>
 							</div>
 							<span class="surveyTip" ref="envirProceduresSpan"></span>
@@ -177,8 +174,8 @@
 						<span class="red">*</span>环境应急预案：
 						<select name="" id="record" class="surveySelect" v-model="re_emergencyPlan">
 							<option value=""></option>
-							<option value="已备案-已过期">已备案-已过期</option>
-							<option value="已备案-未过期">已备案-未过期</option>
+							<option value="已备案,已过期">已备案,已过期</option>
+							<option value="已备案,未过期">已备案,未过期</option>
 							<option value="未备案">未备案</option>
 							<option value="无编制">无编制</option>
 						</select>
@@ -254,9 +251,9 @@
 								<div>
 									<div v-if="item.name==='其他'">
 										<label>
-											<input type="checkbox" v-bind:value="item.name" class="item2_in CheckBoxitem" v-model="re_productType">{{item.name}}
+											<input type="checkbox" v-bind:value="item.name" class="item2_in CheckBoxitem" v-model="re_productType"> {{item.name}}
 										</label>	
-										<input type="text" id="item2_input" v-model="re_otherProductType">
+										<input type="text" id="item2_input" v-model="re_otherProductType" disabled ref="otherProductType">
 									</div>
 								</div>
 							</div>
@@ -279,7 +276,7 @@
 									<label>
 										<input type="checkbox" v-bind:value="item.name" class="item3_in CheckBoxitem" v-model="re_technology">{{item.name}}
 									</label>
-									<input type="text" id="item3_input" v-model="re_otherTechnology">
+									<input type="text" id="item3_input" v-model="re_otherTechnology" disabled ref="otherTechnology">
 								</div>
 
 							</div>
@@ -331,15 +328,15 @@
 									<input type="checkbox" v-bind:value="item.name" class="item5_in CheckBoxitem" v-model="re_exhaustGasType">{{item.name}}
 								</label>
 								<span>(
-									<label><input type="radio" ref="'gas['+index+']'" :name="'gas['+index+']'" class="gasRadio">未处理</label>
-									<label><input type="radio" ref="'gas['+index+']'" :name="'gas['+index+']'" class="gasRadio">已处理</label>
+									<label><input type="radio" ref="'gas['+index+']'" :name="'gas['+index+']'" class="gasRadio" disabled>未处理</label>
+									<label><input type="radio" ref="'gas['+index+']'" :name="'gas['+index+']'" class="gasRadio" disabled>已处理</label>
 								</span> )
 							</div>
 							<div v-if="item.name==='其他'" class="pullutionMchild" v-for="(item,index) in wasteGases">
 								<label class="gasCheck">
 									<input type="checkbox" v-bind:value="item.name" class="item5_in CheckBoxitem" v-model="re_exhaustGasType">{{item.name}}
 								</label>
-								<input type="text" id="item5_input" v-model="re_otherExhaustGasType">
+								<input type="text" id="item5_input" v-model="re_otherExhaustGasType" disabled ref="otherExhaustGasType">
 							</div>
 							
 						</div>
@@ -373,10 +370,10 @@
 							<div class="pullutionMchild">
 								<!-- <input type="checkbox" class="item8_in CheckBoxitem" value="无" hidden checked> -->
 								<label>
-									<input type="radio" value="已签订-已过期" name="guoqi" class="surveyRadio" v-model="re_hazardousStorageSign">已签订-已过期
+									<input type="radio" value="已签订，已过期" name="guoqi" class="surveyRadio" v-model="re_hazardousStorageSign">已签订，已过期
 								</label><br>
 								<label>
-									<input type="radio" value="已签订-未过期" name="guoqi" class="surveyRadio"  v-model="re_hazardousStorageSign">已签订-未过期
+									<input type="radio" value="已签订，未过期" name="guoqi" class="surveyRadio"  v-model="re_hazardousStorageSign">已签订，未过期
 								</label><br>
 								<label>
 									<input type="radio" value="未签订" name="guoqi" class="surveyRadio" v-model="re_hazardousStorageSign">未签订
@@ -416,22 +413,22 @@
 						<div id="item10" class="hidden_item">
 							<div class="pullutionMchild">
 								<label>
-									<input type="radio" value="现场查处" class="item10_in" v-model="re_treat">现场查处
+									<input type="radio" value="现场查处" class="item10_in surveyRadio" v-model="re_treat">现场查处
 								</label>
 							</div>
 							<div class="pullutionMchild">
 								<label>
-									<input type="radio" value="建议立案" class="item10_in" v-model="re_treat">建议立案
+									<input type="radio" value="建议立案" class="item10_in surveyRadio" v-model="re_treat">建议立案
 								</label>
 							</div>
 							<div class="pullutionMchild">
 								<label>
-									<input type="radio" value="跟踪处理" class="item10_in" v-model="re_treat">跟踪处理
+									<input type="radio" value="跟踪处理" class="item10_in surveyRadio" v-model="re_treat">跟踪处理
 								</label>
 							</div>
 							<div class="pullutionMchild">
 								<label>
-									<input type="radio" value="不需处理" class="item10_in" v-model="re_treat">不需处理
+									<input type="radio" value="不需处理" class="item10_in surveyRadio" v-model="re_treat">不需处理
 								</label>
 							</div>
 							<div class="pullution_textarea" ref="problemTextarea" >
