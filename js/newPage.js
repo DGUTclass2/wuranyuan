@@ -8,7 +8,7 @@ window.onload=function(){
 			communities:[],
 			products:[],
 			technologys:[],
-			wasteGases:[],
+			wasteGases:[{name:"测试1"},{name:"测试2"},{name:"其他"}],
 			industries:[
 			{name:"畜禽养殖场、养殖小区"},
 			{name:"农副食品加工业"},
@@ -50,6 +50,7 @@ window.onload=function(){
 			re_licenseUrl:"",
 			re_envirProcedures:"",
 			re_otherEnvirProcedures:"",
+			tmp_envirProcedures:"",
 			re_tradeType:"",
 			re_otherTradeType:"",		
 			re_sewagePermit:"",
@@ -66,7 +67,6 @@ window.onload=function(){
 			re_otherWastewaterTreatment:"",
 			re_waterAcceptComp:"",
 			re_exhaustGasType:[],
-			//re_otherExhaustGasType:[],
 			re_wasteGasTreatment:"",
 			re_hazardousWasteStorage:[],
 			re_hazardousWasteTransfer:[],
@@ -95,7 +95,7 @@ window.onload=function(){
 		},
 		watch: {
 				//环保手续隐藏和显示
-				envirProcedures:function(val){
+				tmp_envirProcedures:function(val){
 					if(val=='0'){
 						this.re_envirProcedures='无';
 						this.re_otherEnvirProcedures='';
@@ -154,19 +154,20 @@ window.onload=function(){
 						this.$refs._uscCode.style.display='block';
 					}
 				},*/
-				re_wastewaterTreatment:function(val){
+				/*re_wastewaterTreatment:function(val){
 					if(this.re_wastewaterTreatment.indexOf('转移处理') == -1) {
 						this.re_waterAcceptComp = '';
 					}
-				},
-				re_exhaustGasType:function(val){
-					if(this.re_exhaustGasType.indexOf('其他') == -1) {
-						this.re_otherExhaustGasType = '';
-					}
-				},
+				},*/
 				//选择污染源类型时其他框显示与隐藏
 				re_pollutionType: function(val) {
 					console.log(val);
+						if(val.indexOf('不涉及') > -1) {//不涉及
+							if(this.re_pollutionType.length>1){
+								this.re_pollutionType.length=0;
+								this.re_pollutionType.push('不涉及');
+							}
+						}
 						if(val.indexOf('涉水') == -1) {//不涉水
 							this.re_wastewaterTreatment = '';
 							this.re_waterAcceptComp = '';
@@ -215,16 +216,98 @@ window.onload=function(){
 						}
 					},
 					re_productType: function (val) {//产品类型不选其他时，其他产品类型为空
-						if(val.indexOf('其他') == -1) {
+						if(val.indexOf('其他') == -1) {//不选择其他
 							this.re_otherProductType = '';
+							this.$refs.otherProductType[0].disabled=true;
+						}else{//选择其他的情况
+							this.$refs.otherProductType[0].disabled=false;
 						}
 					},
 					re_technology: function(val) {//主要工艺不选其他时，其他主要工艺为空
-						if(val.indexOf('其他') == -1) {
+						if(val.indexOf('其他') == -1) {//不选择其他
 							this.re_otherTechnology = '';
+							this.$refs.otherTechnology[0].disabled=true;
+						}else{//选择其他的情况
+
+							this.$refs.otherTechnology[0].disabled=false;
 						}
 					},
-						/*tmp_emergencyPlan1:function(val){
+					re_legalRePhone:function(val){//法定联系人验证电话正则表达式
+						console.log(val);
+						var Reg=/(^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$)|(^769)[0-9]{8}$/g;
+						if(!Reg.test(val)){
+							this.$refs.leReIponeSpan.innerHTML='电话格式错误！';
+						}else{
+							this.$refs.leReIponeSpan.innerHTML='';
+						}
+					},
+					re_envirRePhone:function(val){//环保联系人验证电话正则表达式
+						console.log(val);
+						var Reg=/(^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$)|(^769)[0-9]{8}$/g;
+						if(!Reg.test(val)){
+							this.$refs.envirRePhoneSpan.innerHTML='电话格式错误！';
+						}else{
+							this.$refs.envirRePhoneSpan.innerHTML='';
+						}
+					},
+					re_subdivisionArea:function(val){//环保联系人验证电话正则表达式
+						console.log(val);
+						var Reg=/^\d+-\d+-\d+$/g;
+						if(!Reg.test(val)){
+							this.$refs.subdivisionAreaSpan.innerHTML='细分区域格式错误！';
+						}else{
+							this.$refs.subdivisionAreaSpan.innerHTML='';
+						}
+					},
+					re_exhaustGasType:function(){
+						let els = this.$refs.item5_div.querySelectorAll('input.gasRadio');
+						/*
+						 *修改废气类型数据库时，需要修改此项
+						 */
+						if(this.re_exhaustGasType.indexOf('粉尘废气')>-1){//选择了粉尘废气
+							els[0].disabled=false;
+							els[1].disabled=false;
+						}else{//没有选择粉尘废气
+							els[0].checked=false;
+							els[1].checked=false;
+							els[0].disabled=true;
+							els[1].disabled=true;
+						}
+						if(this.re_exhaustGasType.indexOf('锅炉废气')>-1){//选择了锅炉废气
+							els[2].disabled=false;
+							els[3].disabled=false;
+						}else{//没有选择锅炉废气
+							els[2].checked=false;
+							els[3].checked=false;
+							els[2].disabled=true;
+							els[3].disabled=true;
+						}
+						if(this.re_exhaustGasType.indexOf('异味')>-1){//选择了异味
+							els[4].disabled=false;
+							els[5].disabled=false;
+						}else{//没有选择异味
+							els[4].checked=false;
+							els[5].checked=false;
+							els[4].disabled=true;
+							els[5].disabled=true;
+						}
+						if(this.re_exhaustGasType.indexOf('VOCs')>-1){//选择了VOCs
+							els[6].disabled=false;
+							els[7].disabled=false;
+						}else{//没有选择VOCs
+							els[6].checked=false;
+							els[7].checked=false;
+							els[6].disabled=true;
+							els[7].disabled=true;
+						}
+						if(this.re_exhaustGasType.indexOf('其他') == -1) {//没有选择其他项
+							this.re_otherExhaustGasType = '';
+							this.$refs.otherExhaustGasType[0].disabled=true;
+						}else{
+							this.$refs.otherExhaustGasType[0].disabled=false;
+						}
+					},
+					/*tmp_emergencyPlan1:function(val){
 							if(val.indexOf('已备案')==-1){
 								this.tmp_emergencyPlan2='';
 								this.re_emergencyPlan=this.tmp_emergencyPlan1+this.tmp_emergencyPlan2;
@@ -319,17 +402,53 @@ window.onload=function(){
 							}else{
 								vme.tradeType=vme.re_tradeType;
 							}
-							console.log(vme.tradeType);
-		       				//废水处理选择其他时，其他废水处理的内容赋值给废水处理上传
-		       				if(vme.re_wastewaterTreatment=='其他'){
-		       					vme.re_wastewaterTreatment=vme.re_otherWastewaterTreatment;
+		       				//废气处理上传数据处理
+		       				let els = vme.$refs.item5_div.querySelectorAll('input.gasRadio');
+							/*
+							 *修改废气类型数据库时，需要修改此项
+							 */
+							if(vme.re_exhaustGasType.indexOf('粉尘废气')>-1){//选择了粉尘废气
+								if(els[0].checked==true){
+									vme.re_wasteGasTreatment.push("未处理直接排放");
+								}else{
+									vme.re_wasteGasTreatment.push("经处理后排放");
+								}
+							}
+							if(vme.re_exhaustGasType.indexOf('锅炉废气')>-1){//选择了锅炉废气
+								if(els[2].checked==true){
+									vme.re_wasteGasTreatment.push("未处理直接排放");
+								}else{
+									vme.re_wasteGasTreatment.push("经处理后排放");
+								}
+							}
+							if(vme.re_exhaustGasType.indexOf('异味')>-1){//选择了异味
+								if(els[4].checked==true){
+									vme.re_wasteGasTreatment.push("未处理直接排放");
+								}else{
+									vme.re_wasteGasTreatment.push("经处理后排放");
+								}
+							}
+							if(vme.re_exhaustGasType.indexOf('VOCs')>-1){//选择了VOCs
+								if(els[6].checked==true){
+									vme.re_wasteGasTreatment.push("未处理直接排放");
+								}else{
+									vme.re_wasteGasTreatment.push("经处理后排放");
+								}
+							}
+							if(vme.re_exhaustGasType.indexOf('其他')>-1){//选择了VOCs
+									vme.re_wasteGasTreatment.push(re_otherExhaustGasType);
+							}
+		       				//环保手续上传数据处理
+		       				if(vme.tmp_envirProcedures==0){//无环保手续
+		       					vme.envirProcedures='无';
+		       				}else{
+		       					if(vme.re_envirProcedures=='其他'){
+		       						vme.envirProcedures='其他';
+		       					}else{
+		       						vme.envirProcedures='有';
+		       					}
 		       				}
-		       				//废气类型选择其他时，其他废气类型的内容赋值给废气类型上传
-		       				var index = vme.re_exhaustGasType.indexOf('其他');
-		       				if(index>-1){
-		       					vme.splice(index, 1); 
-		       					vme.re_exhaustGasType.push(re_otherExhaustGasType);
-		       				}
+
 		       			},
 					//拼接字符串id
 					fileId5(id){return "file5"+id;},
@@ -635,6 +754,7 @@ window.onload=function(){
 		       		var no=-1;
 		       		var form = document.getElementById("picForm");
 		       		var imageList = new FormData(form);
+		       		var length2;
 		       		var length3;
 		       		var length4;
 		       		var length5;
@@ -653,7 +773,7 @@ window.onload=function(){
 		       		}
 		       		for(var i=0;i<pic3.length;i++){
 		       			let tempPic3=pic3[i].files;
-		       			length3=tempPic3.length;
+		       			length3=pic3.length;
 		       			if(tempPic3.length>0){
 		       				if(tempPic3[0].size>(5*1024*1024)) flag=false;
 		       				no=3;
@@ -661,7 +781,7 @@ window.onload=function(){
 		       		}
 		       		for(var i=0;i<pic4.length;i++){
 		       			let tempPic4=pic4[i].files;
-		       			length4=tempPic4.length;
+		       			length4=pic4.length;
 		       			if(tempPic4.length>0){
 		       				if(tempPic4[0].size>(5*1024*1024)) flag=false;
 		       				no=3;
@@ -669,7 +789,7 @@ window.onload=function(){
 		       		}
 		       		for(var i=0;i<pic5.length;i++){
 		       			let tempPic5=pic5[i].files;
-		       			length5=tempPic5.length;
+		       			length5=pic5.length;
 		       			if(tempPic5.length>0){
 		       				if(tempPic5[0].size>(5*1024*1024)) flag=false;
 		       				no=3;
@@ -679,10 +799,16 @@ window.onload=function(){
 		       		if (no==-1){
 		       			flag=false;
 		       		}
-
-		       		console.log(length3);
-		       		console.log(length4);
-		       		console.log(length5);
+		       		if(this.re_hasLicence==""){//未勾选营业执照
+		       			alert("未勾选营业执照");
+		       			document.getElementById("pollutionSubmit").removeAttribute("disabled");
+		       			return false;
+		       		}
+		       		if(this.re_hasLicence==0){//无营业执照
+		       			length2=0;
+		       		}else{
+		       			length2=1;
+		       		}
 		       		if(flag){
 		       			document.getElementById("pollutionSubmit").innerHTML="提交中，请稍后...";
 		       			let headers={"content-type":"multipart/form-data"};
@@ -695,25 +821,25 @@ window.onload=function(){
 		       					if(results.code=="00"){
 		       						if(results.data.length>=1)
 		       							this.re_picture1=results.data[0];
-		       						if(results.data.length>=2)
+		       						if(length2>0)
 		       							this.re_licenseUrl=results.data[1];
 		       						if(length3>0){
-		       							for(var i=2;i<2+length3;i++){
-		       								this.re_picture3=results.data[i];
+		       							for(var i=1+length2;i<1+length2+length3;i++){
+		       								this.re_picture3.push(results.data[i]);
 		       							}
 		       						}
 		       						if(length4>0){
-		       							for(var i=2+length3;i<2+length3+length4;i++){
-		       								this.re_picture4=results.data[i];
+		       							for(var i=1+length2+length3;i<1+length2+length3+length4;i++){
+		       								this.re_picture4.push(results.data[i]);
 		       							}
 		       						}
 		       						if(length5>0){
-		       							for(var i=2+length3+length4;i<2+length3+length4+length5;i++){
-		       								this.re_picture5=results.data[i];
+		       							for(var i=1+length2+length3+length4;i<1+length2+length3+length4+length5;i++){
+		       								console.log(i);
+		       								this.re_picture5.push(results.data[i]);
 		       							}
 		       						}
 		       					}
-		       					console.log(this.$data.re_picture5.join('#'));
 		       					var storage=window.localStorage;
 		       					var userid=storage.getItem("userId");
 		       					var longitude=document.getElementById("lngAndlat1").value;
@@ -734,7 +860,7 @@ window.onload=function(){
 		       						envirRepresentative:this.$data.re_envirRepresentative,
 		       						envirRePhone:this.$data.re_envirRePhone,
 		       						hasLicence:this.$data.re_hasLicence=='0'?false:true,
-		       						envirProcedures:this.$data.re_envirProcedures,
+		       						envirProcedures:this.$data.envirProcedures,
 		       						tradeType:this.$data.tradeType,
 		       						pollutionType:this.$data.re_pollutionType.join("#"),
 		       						productType:this.$data.re_productType.join("#"),
@@ -744,7 +870,7 @@ window.onload=function(){
 		       						wastewaterTreatment:this.$data.re_wastewaterTreatment,
 		       						waterAcceptComp:this.$data.re_waterAcceptComp,
 		       						exhaustGasType:this.$data.re_exhaustGasType.join('#'),
-		       						wasteGasTreatment:this.$data.re_wasteGasTreatment,
+		       						wasteGasTreatment:this.$data.re_wasteGasTreatment.join('#'),
 		       						hazardousWasteStorage:this.$data.re_hazardousWasteStorage,
 		       						hazardousWasteTransfer:this.$data.re_hazardousWasteTransfer,
 		       						hazardousAcceptComp:this.$data.re_hazardousAcceptComp,
