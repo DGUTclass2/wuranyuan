@@ -8,7 +8,7 @@ window.onload=function(){
 			communities:[],
 			products:[],
 			technologys:[],
-			wasteGases:[{name:"测试1"},{name:"测试2"},{name:"其他"}],
+			wasteGases:[],
 			industries:[
 			{name:"畜禽养殖场、养殖小区"},
 			{name:"农副食品加工业"},
@@ -67,11 +67,11 @@ window.onload=function(){
 			re_otherWastewaterTreatment:"",
 			re_waterAcceptComp:"",
 			re_exhaustGasType:[],
-			re_wasteGasTreatment:"",
-			re_hazardousWasteStorage:[],
-			re_hazardousWasteTransfer:[],
-			re_hazardousAcceptComp:[],
-			re_hazardousStorageSign:[],
+			re_wasteGasTreatment:[],
+			re_hazardousWasteStorage:"",
+			re_hazardousWasteTransfer:"",
+			re_hazardousAcceptComp:"",
+			re_hazardousStorageSign:"",
 			re_treat:"",
 			re_problem:"",
 			re_auditor:"",
@@ -179,7 +179,7 @@ window.onload=function(){
 						if(val.indexOf('涉气') == -1) {//不涉气
 							this.re_exhaustGasType = [];
 							this.re_otherExhaustGasType = '';
-							this.re_wasteGasTreatment = '';
+							this.re_wasteGasTreatment=[];
 							//废气处理情况全部设为未勾选
 							let els = this.$refs.item5_div.querySelectorAll('input.gasRadio');
 							for(var i=0;i<els.length;i++){
@@ -233,7 +233,6 @@ window.onload=function(){
 						}
 					},
 					re_legalRePhone:function(val){//法定联系人验证电话正则表达式
-						console.log(val);
 						var Reg=/(^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$)|(^769)[0-9]{8}$/g;
 						if(!Reg.test(val)){
 							this.$refs.leReIponeSpan.innerHTML='电话格式错误！';
@@ -242,7 +241,6 @@ window.onload=function(){
 						}
 					},
 					re_envirRePhone:function(val){//环保联系人验证电话正则表达式
-						console.log(val);
 						var Reg=/(^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$)|(^769)[0-9]{8}$/g;
 						if(!Reg.test(val)){
 							this.$refs.envirRePhoneSpan.innerHTML='电话格式错误！';
@@ -251,7 +249,6 @@ window.onload=function(){
 						}
 					},
 					re_subdivisionArea:function(val){//环保联系人验证电话正则表达式
-						console.log(val);
 						var Reg=/^\d+-\d+-\d+$/g;
 						if(!Reg.test(val)){
 							this.$refs.subdivisionAreaSpan.innerHTML='细分区域格式错误！';
@@ -264,37 +261,37 @@ window.onload=function(){
 						/*
 						 *修改废气类型数据库时，需要修改此项
 						 */
-						if(this.re_exhaustGasType.indexOf('粉尘废气')>-1){//选择了粉尘废气
+						if(this.re_exhaustGasType.indexOf('VOCs')>-1){//选择了VOCs
 							els[0].disabled=false;
 							els[1].disabled=false;
-						}else{//没有选择粉尘废气
+						}else{//没有选择VOCs
 							els[0].checked=false;
 							els[1].checked=false;
 							els[0].disabled=true;
 							els[1].disabled=true;
 						}
-						if(this.re_exhaustGasType.indexOf('锅炉废气')>-1){//选择了锅炉废气
+						if(this.re_exhaustGasType.indexOf('粉尘废气')>-1){//选择了粉尘废气
 							els[2].disabled=false;
 							els[3].disabled=false;
-						}else{//没有选择锅炉废气
+						}else{//没有选择粉尘废气
 							els[2].checked=false;
 							els[3].checked=false;
 							els[2].disabled=true;
 							els[3].disabled=true;
 						}
-						if(this.re_exhaustGasType.indexOf('异味')>-1){//选择了异味
+						if(this.re_exhaustGasType.indexOf('锅炉废气')>-1){//选择了锅炉废气
 							els[4].disabled=false;
 							els[5].disabled=false;
-						}else{//没有选择异味
+						}else{//没有选择锅炉废气
 							els[4].checked=false;
 							els[5].checked=false;
 							els[4].disabled=true;
 							els[5].disabled=true;
 						}
-						if(this.re_exhaustGasType.indexOf('VOCs')>-1){//选择了VOCs
+						if(this.re_exhaustGasType.indexOf('异味')>-1){//选择了异味
 							els[6].disabled=false;
 							els[7].disabled=false;
-						}else{//没有选择VOCs
+						}else{//没有选择异味
 							els[6].checked=false;
 							els[7].checked=false;
 							els[6].disabled=true;
@@ -429,14 +426,14 @@ window.onload=function(){
 								}
 							}
 							if(vme.re_exhaustGasType.indexOf('VOCs')>-1){//选择了VOCs
-								if(els[6].checked==true){
+								if(els[0].checked==true){
 									vme.re_wasteGasTreatment.push("未处理直接排放");
 								}else{
 									vme.re_wasteGasTreatment.push("经处理后排放");
 								}
 							}
 							if(vme.re_exhaustGasType.indexOf('其他')>-1){//选择了VOCs
-									vme.re_wasteGasTreatment.push(re_otherExhaustGasType);
+									vme.re_wasteGasTreatment.push(vme.re_otherExhaustGasType);
 							}
 		       				//环保手续上传数据处理
 		       				if(vme.tmp_envirProcedures==0){//无环保手续
@@ -597,6 +594,8 @@ window.onload=function(){
 		                 		results=res.body;
 		                 		for(var i=0;i<results.length;i++){
 		                 			this.$data.wasteGases.push({name:results[i].name});
+		                 			this.$data.wasteGases.push({ture:'未处理'});
+		                 			this.$data.wasteGases.push({ture:'已处理'});
 		                 		} 
 		                 	},function(res){
 		                 		console.log(res.status);
