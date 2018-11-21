@@ -146,6 +146,13 @@ window.onload=function(){
 						this.re_otherTradeType='';
 					}
 				},
+				re_hasLicence:function(){
+					if(this.re_hasLicence == 0){//无营业执照
+						this.$refs.hasLicencePic.style.display="none"
+					}else{
+						this.$refs.hasLicencePic.style.display="block"
+					}
+				},
 				/*re_hasLicence:function(val){
 					if(val==='无' || val==''){
 						this.re_uscCode="";
@@ -594,8 +601,6 @@ window.onload=function(){
 		                 		results=res.body;
 		                 		for(var i=0;i<results.length;i++){
 		                 			this.$data.wasteGases.push({name:results[i].name});
-		                 			this.$data.wasteGases.push({ture:'未处理'});
-		                 			this.$data.wasteGases.push({ture:'已处理'});
 		                 		} 
 		                 	},function(res){
 		                 		console.log(res.status);

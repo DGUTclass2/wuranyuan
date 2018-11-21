@@ -142,18 +142,12 @@ window.onload = function () {
             tradeType: "",
             envirProcedures: "",
             re_otherExhaustGasType: "",
-            lists3: [{
-                fileName: "file0.18751232642883942"
-            }],
-            lists4: [{
-                fileName: "file0.18751232643883942"
-            }],
-            lists5: [{
-                fileName: "file0.18751232612883942"
-            }],
+            lists3: [],
+            lists4: [],
+            lists5: [],
             otherTechnologyDisabled: true,
-            otherProductTypeDisabled: true
-
+            otherProductTypeDisabled: true,
+            submitDisabled:false
         },
         watch: {
             immediate: true,
@@ -192,10 +186,8 @@ window.onload = function () {
                  *此处13表示数据库中的其他项对应的ID，若修改数据库，13也要跟着修改
                  */
                 if (this.re_tag == 13) { //选择了其他
-                    console.log("选择了其他");
                     this.$refs.otherTag.style.display = 'block';
                 } else { //没有选择其他
-                    console.log("没有选择其他");
                     this.$refs.otherTag.style.display = 'none';
                     this.re_otherTag = '';
                 }
@@ -224,7 +216,6 @@ window.onload = function () {
             },*/
             //选择污染源类型时其他框显示与隐藏
             re_pollutionType: function (val) {
-                console.log(val);
                 if (val.indexOf('不涉及') > -1) { //不涉及
                     if (this.re_pollutionType.length > 1) {
                         this.re_pollutionType.length = 0;
@@ -282,10 +273,8 @@ window.onload = function () {
                 if (val.indexOf('其他') == -1) { //不选择其他
                     this.re_otherProductType = '';
                     this.otherProductTypeDisabled = true;
-                    console.log(this.otherProductTypeDisabled);
                 } else { //选择其他的情况
                     this.otherProductTypeDisabled = false;
-                    console.log(this.otherProductTypeDisabled);
                 }
             },
             re_technology: function (val) { //主要工艺不选其他时，其他主要工艺为空
@@ -313,7 +302,6 @@ window.onload = function () {
                 }
             },
             re_subdivisionArea: function (val) { //环保联系人验证电话正则表达式
-                console.log(val);
                 var Reg = /^\d+-\d+-\d+$/g;
                 if (!Reg.test(val)) {
                     this.$refs.subdivisionAreaSpan.innerHTML = '细分区域格式错误！';
@@ -365,7 +353,6 @@ window.onload = function () {
                     }
                     if (this.re_exhaustGasType.indexOf('其他') == -1) { //没有选择其他项
                         this.re_otherExhaustGasType = '';
-                        console.log(this.$refs.otherExhaustGasType);
                         this.$refs.otherExhaustGasType[0].disabled = true;
                     } else {
                         this.$refs.otherExhaustGasType[0].disabled = false;
@@ -390,9 +377,36 @@ window.onload = function () {
                 }*/
             },
             methods: {
+                //返回照片路径
+                pirUrl:function(item){
+                    return "../"+item[0];
+                },
+                //删除数组中某张照片
+                picDel:function(item){
+                    var res=null;
+                    res=vme.re_picture3.findIndex(function(val){//照片是否在pictrue3中
+                        if(val[0]==item[0])
+                        return true;
+                    });
+                    if(res>-1){//存在元素
+                        vme.re_picture3.splice(res, 1);
+                    }
+                    res=vme.re_picture4.findIndex(function(val){//照片是否在pictrue4中
+                        if(val[0]==item[0])
+                        return true;
+                    });
+                    if(res>-1){//存在元素
+                        vme.re_picture4.splice(res, 1);
+                    }res=vme.re_picture5.findIndex(function(val){//照片是否在pictrue5中
+                        if(val[0]==item[0])
+                        return true;
+                    });
+                    if(res>-1){//存在元素
+                        vme.re_picture5.splice(res, 1);
+                    }
+                },
             //验证必填项是否都已填
             checkItem: function () {
-                console.log(vme.$refs.subdivisionAreaSpan);
                 if (vme.re_subdivisionArea == "") { //细分区域未填写
                     vme.$refs.subdivisionAreaSpan.innerHTML = "细分区域未填写！";
                     vme.$refs.subdivisionArea.focus();
@@ -498,7 +512,6 @@ window.onload = function () {
                             vme.re_wasteGasTreatment.push("经处理后排放");
                         }
                     } else if (vme.re_exhaustGasType[i] == '其他') { //选择了其他
-                        console.log(vme.re_wasteGasTreatment);
                         vme.re_wasteGasTreatment.push(vme.re_otherExhaustGasType);
                     }
                 }
@@ -534,6 +547,12 @@ window.onload = function () {
                 return "view3" + id;
             },
             //动态添加文件
+            add1: function () {
+                this.$refs.addFile1.style.display="block";
+            },
+            add2: function () {
+                this.$refs.addFile2.style.display="block";
+            },
             add3: function () {
                 let cope = {
                     fileName: "file" + Math.random()
@@ -541,6 +560,12 @@ window.onload = function () {
                 vme.lists3.push(cope);
             },
             //动态删除文件
+            del1:function(){
+                this.$refs.addFile1.style.display="none";
+            },  
+            del2:function(){
+                this.$refs.addFile2.style.display="none";
+            },
             del3: function (index) {
                 vme.lists3.splice(index, 1);
             },
@@ -568,7 +593,6 @@ window.onload = function () {
             },
             //动态预览照片
             showImage: function (fileId, imageId) {
-                console.log(fileId, imageId);
                 var files = document.getElementById(fileId).files;
                 var file;
                 if (files && files.length) {
@@ -583,7 +607,6 @@ window.onload = function () {
                 var geolocation = new BMap.Geolocation();
                 geolocation.getCurrentPosition(function (r) {
                     if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                        console.log(r.point.lng, r.point.lat);
                         var mk = new BMap.Marker(r.point);
                         // 创建地理编码实例      
                         var myGeo = new BMap.Geocoder();
@@ -639,7 +662,6 @@ window.onload = function () {
                         this.$data.towns.push({
                             name: results[i].town
                         });
-                        //console.log(this.$data.towns[i].name);
                     }
                 }, function (res) {
                     console.log(res.status);
@@ -652,7 +674,6 @@ window.onload = function () {
                 }).then(function (res) {
                     let results = res.body;
                     for (var i = 0; i < results.length; i++) {
-                        //console.log(results[i].name);
                         this.$data.products.push({
                             name: results[i].name
                         });
@@ -751,13 +772,11 @@ window.onload = function () {
                         }, function (res) {
                             console.log(res.status);
                         });
-                        console.log(results);
                         this.re_community = results.pollutionResearch.company.community;
 
                     //环保手续处理
                     if (results.pollutionResearch.company.envirProcedures == '无') {
                         this.tmp_envirProcedures = 0;
-                        console.log(this.envirProcedures);
                     } else {
                         this.tmp_envirProcedures = 1;
                         this.re_envirProcedures = results.pollutionResearch.company.envirProcedures;
@@ -830,7 +849,6 @@ window.onload = function () {
                                             els[6].checked = true
                                         }
                                     } else if (tmp_exhaustGasType[i] == '其他') { //选择了其他
-                                        console.log(tmp_wasteGasTreatment[i]);
                                         this.re_otherExhaustGasType = tmp_wasteGasTreatment[i];
                                     }
                                 }
@@ -840,7 +858,6 @@ window.onload = function () {
                         console.log(res.status);
                     });
                     //经纬度处理
-                    console.log(document.getElementById('lngAndlat1'));
                     document.getElementById('lngAndlat1').value = results.pollutionResearch.company.longitude;
                     document.getElementById('lngAndlat2').value = results.pollutionResearch.company.latitude;
 
@@ -850,17 +867,15 @@ window.onload = function () {
                     this.re_picture3=results.picture2==null?[]:results.picture2.split('#');
                     this.re_picture4=results.picture3==null?[]:results.picture3.split('#');
                     this.re_picture5=results.picture4==null?[]:results.picture4.split('#');
-                    document.getElementById('view10').src = '../' + results.picture1; //厂门口照片
-                    document.getElementById('view20').src = '../' + results.pollutionResearch.company.licenseUrl; //营业执照
-                    //污染工艺照片
+                    document.getElementById('view10_').src = '../' + results.picture1; //厂门口照片
+                    document.getElementById('view20_').src = '../' + results.pollutionResearch.company.licenseUrl; //营业执照
+                   /* //污染工艺照片
                     if (pic3 != null) {
                        var pic3 = results.picture2.split('#');
                        document.getElementById('view30').src = '../' + pic3[0];
                        for (var i = 1; i < pic3.length; i++) {
                         this.$options.methods.add3();
                         var str = 'view3' + i;
-                        console.log(str);
-                        console.log(document.getElementById(str));
                         document.getElementById(str).src = '../' + pic3[i];
                     }
                 }
@@ -884,7 +899,7 @@ window.onload = function () {
                             var str = "view5" + i;
                             document.getElementById(str).src = '../' + pic5[i];
                         }
-                    }
+                    }*/
 
                     //产品类型处理
                     var tmp_productType = results.pollutionResearch.productType.split('#');
@@ -948,14 +963,13 @@ window.onload = function () {
                     ).then(function (res) {
                         var results = res.body;
                         for (var i = 0; i < results.length; i++) {
-                        //console.log(results[i].community);
-                        this.$data.communities.push({
-                            name: results[i].community
-                        });
-                    }
-                }, function (res) {
-                    console.log(res.status);
-                });
+                            this.$data.communities.push({
+                                name: results[i].community
+                            });
+                        }
+                    }, function (res) {
+                        console.log(res.status);
+                    });
                 },
 
             //上传数据函数
@@ -1009,9 +1023,9 @@ window.onload = function () {
                    inspector4: this.$data.re_inspector4,
                    picture1: this.$data.re_picture1,
                    licenseUrl: this.re_licenseUrl,
-                   picture2: this.$data.re_picture3.join('#'),
-                   picture3: this.$data.re_picture4.join('#'),
-                   picture4: this.$data.re_picture5.join('#'),
+                   picture2: this.$data.re_picture3.length==0?"":this.re_picture3.join('#'),
+                   picture3: this.$data.re_picture4.length==0?"":this.re_picture4.join('#'),
+                   picture4: this.$data.re_picture5.length==0?"":this.re_picture5.join('#'),
                    checkDate: this.$data.re_checkDate,
                    checkUserNo: this.$data.re_userNo,
                    unitNo: this.$data.re_fightUnit,
@@ -1021,7 +1035,6 @@ window.onload = function () {
                    otherEnvirProcedures: this.$data.re_otherEnvirProcedures,
                    otherWastewaterTreatment: this.$data.re_otherWastewaterTreatment
                };
-               console.log(param);
                let headers={"Accept":"application/json","content-type":"application/json"};
                let url="https://dgutxm.cn/wuranyuan-server/saveCheckTableInfo";
                this.$http.post(url,param,
@@ -1032,11 +1045,11 @@ window.onload = function () {
                       window.location="menu.html";
                   }else{
                    alert(str.message);
-                   document.getElementById("pollutionSubmit").removeAttribute("disabled");
+                   this.submitDisabled=false;
                }
 
            },function(res){
-               document.getElementById("pollutionSubmit").removeAttribute("disabled");
+               this.submitDisabled=false;
                console.log(res.status);
            });
                },
@@ -1044,94 +1057,112 @@ window.onload = function () {
 
             //获取照片函数
             postPic: function () {
-                document.getElementById("pollutionSubmit").setAttribute("disabled", true);
+                vme.submitDisabled=true;
                 var flag = true;
                 var no = -1;
                 var form = document.getElementById("picForm");
                 var imageList = new FormData(form);
+                var length1;
                 var length2;
                 var length3;
                 var length4;
                 var length5;
-                let pic1 = this.$refs.file1.files;
-                let pic2 = this.$refs.file2.files;
-                let pic3 = this.$refs.file3;
-                let pic4 = this.$refs.file4;
-                let pic5 = this.$refs.file5;
+                let pic1 = vme.$refs.file1.files;
+                let pic2 = vme.$refs.file2.files;
+                let pic3 = vme.$refs.file3;
+                let pic4 = vme.$refs.file4;
+                let pic5 = vme.$refs.file5;
+
+                length1=pic1.length;
                 if (pic1.length > 0) {
                     if (pic1[0].size > (5 * 1024 * 1024)) flag = false;
                     no = 1;
                 }
+
+                length2=pic2.length;
                 if (pic2.length > 0) {
                     if (pic2[0].size > (5 * 1024 * 1024)) flag = false;
                     no = 2;
                 }
+
+                length3=pic3.length;
                 for (var i = 0; i < pic3.length; i++) {
                     let tempPic3 = pic3[i].files;
-                    length3 = pic3.length;
                     if (tempPic3.length > 0) {
                         if (tempPic3[0].size > (5 * 1024 * 1024)) flag = false;
                         no = 3;
+                    }else{
+                        alert("存在未选择图片");
+                        vme.submitDisabled=false;
+                        return false;
                     }
                 }
+
+                length4=pic4.length;
                 for (var i = 0; i < pic4.length; i++) {
                     let tempPic4 = pic4[i].files;
-                    length4 = pic4.length;
                     if (tempPic4.length > 0) {
                         if (tempPic4[0].size > (5 * 1024 * 1024)) flag = false;
                         no = 3;
+                    }else{
+                        alert("存在未选择图片");
+                        vme.submitDisabled=false;
+                        return false;
                     }
                 }
+                length5=pic5.length;
                 for (var i = 0; i < pic5.length; i++) {
                     let tempPic5 = pic5[i].files;
-                    length5 = pic5.length;
                     if (tempPic5.length > 0) {
                         if (tempPic5[0].size > (5 * 1024 * 1024)) flag = false;
                         no = 3;
+                    }else{
+                        alert("存在未选择图片");
+                        vme.submitDisabled=false;
+                        return false;
                     }
                 }
-                if (this.re_hasLicence == "") { //未勾选营业执照
-                    alert("未勾选营业执照");
-                    document.getElementById("pollutionSubmit").removeAttribute("disabled");
-                    return false;
-                }
-                if (this.re_hasLicence == 0) { //无营业执照
-                    length2 = 0;
-                } else {
-                    length2 = 1;
-                }
+
                 if (flag) {
                     document.getElementById("pollutionSubmit").innerHTML = "上传照片中，请稍后...";
                     let headers = {
                         "content-type": "multipart/form-data"
                     };
                     let url = "/wuranyuan-server/uploadPic";
-                    this.$http.post(url, imageList,
+                    vme.$http.post(url, imageList,
                         headers, {
                             emulateJSON: true
                         }
                         ).then(function (res) {
-                            console.log(res);
                             var results = res.body;
                             if (results.code == "00") {
-                                if (results.data.length >= 1)
-                                    this.re_picture1 = results.data[0];
-                                if (length2 > 0)
-                                    this.re_licenseUrl = results.data[1];
-                                if (length3 > 0) {
-                                    for (var i = 1 + length2; i < 1 + length2 + length3; i++) {
-                                        this.re_picture3.push(results.data[i]);
+                                if (results.data.length >= 1){
+                                    var i=0;
+                                    if(length1 > 1){
+                                        vme.re_picture1 = results.data[i];
+                                        i++;
                                     }
-                                }
-                                if (length4 > 0) {
-                                    for (var i = 1 + length2 + length3; i < 1 + length2 + length3 + length4; i++) {
-                                        this.re_picture4.push(results.data[i]);
+                                    if (length2 > 0){
+                                        vme.re_licenseUrl = results.data[i];
+                                        i++;
                                     }
-                                }
-                                if (length5 > 0) {
-                                    for (var i = 1 + length2 + length3 + length4; i < 1 + length2 + length3 + length4 + length5; i++) {
-                                        console.log(i);
-                                        this.re_picture5.push(results.data[i]);
+                                    if (length3 > 0) {
+                                        while ( i < length1 + length2 + length3) {
+                                            vme.re_picture3.push(results.data[i]);
+                                            i++;
+                                        }
+                                    }
+                                    if (length4 > 0) {
+                                        while ( i < length1 + length2 + length3 + length4 ) {
+                                            vme.re_picture4.push(results.data[i]);
+                                            i++;
+                                        }
+                                    }
+                                    if (length5 > 0) {
+                                        while ( i < 1 + length2 + length3 + length4 + length5) {
+                                            vme.re_picture5.push(results.data[i]);
+                                            i++;
+                                        }
                                     }
                                 }
                             }
@@ -1139,20 +1170,18 @@ window.onload = function () {
                         }, function (res) {
                             alert("图片上传失败");
                             document.getElementById("pollutionSubmit").innerHTML = "提交";
-                            document.getElementById("pollutionSubmit").removeAttribute("disabled");
+                            vme.submitDisabled=false;
                         });
                     } else {
-                        if (no == -1) alert("第一张图片必须上传！");
-                        else alert("第" + no + "图片过大,上传失败！");
+                        alert("第" + no + "图片过大,上传失败！");
                         document.getElementById("pollutionSubmit").innerHTML = "提交";
-                        document.getElementById("pollutionSubmit").removeAttribute("disabled");
+                        vme.submitDisabled=false;
                     }
                 }
             },
             created: function () {
                 this.postData();
                 this.$nextTick(() => {
-                    console.log('first');
                 });
             }
         })

@@ -461,8 +461,24 @@
 		</div>
 		<div class="surveyItem">
 			<form id="picForm">
-				<p><span class="red">*</span>现场照片：</p>
-				<!-- 
+				<h2><span class="red">*</span>现场照片：</h2>
+				<p>1、厂门口照片：</p>
+				<div style="text-align: center;"><img src="" alt="" id="view10_" class="fieldImage"></div>
+				<p>2、营业执照照片：(若无营业执照时，不需上传；否则必须上传)</p>
+				<div style="text-align: center;"><img src="" alt="" id="view20_" class="fieldImage"></div>
+				<p>3、污染工艺照片：</p>
+				<div v-for="(item,index) in re_picture3">
+					<div style="text-align: center;"><img v-bind:src="pirUrl(item)" alt="" :id="viewId3(index)" class="fieldImage"><br><a href="javascript:void(0)" @click="picDel(item)">删除图片</a></div>
+				</div>
+				<p>4、污染防治设施照片：</p>
+				<div v-for="(item,index) in re_picture4">
+					<div style="text-align: center;"><img v-bind:src="pirUrl(item)" alt="" :id="viewId4(index)" class="fieldImage"><br><a href="javascript:void(0)" @click="picDel(item)">删除图片</a></div>
+				</div>
+				<p>5、排放口照片：</p>
+				<div v-for="(item,index) in re_picture5">
+					<div style="text-align: center;"><img v-bind:src="pirUrl(item)" alt="" :id="viewId4(index)" class="fieldImage"><br><a href="javascript:void(0)" @click="picDel(item)">删除图片</a></div>
+				</div>
+								<!-- 
 								<p >1、厂门口照片（必须上传）：</p>
 								<input type="file" name="imageList" id="fieldFile1" class="surveyInput" accept="image/*"  ref="file1"><br>
 								<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
@@ -479,22 +495,21 @@
 								<input type="file" name="imageList" id="fieldFile5" class="surveyInput" accept="image/*"  ref="file5"><br>
 								<div style="text-align: center;"><img src="" alt="" id="view5" class="fieldImage"></div> -->
 
-				<p>1、厂门口照片：</p>
+				<div style="height: 30px;"></div>
+				<hr><h2><span class="red">*</span>添加照片：</h2>
+				<p>1、厂门口照片：<input type="button" v-on:click="add1" value=" + "></p>
+				<span class="fileItem itemHidden" ref="addFile1">
+					<input type="file" id="file10" accept="image/*" ref="file1" class="fileUpload" @change="showImage('file10','view10')" name="imageList">
+					<input type="button" v-on:click="del1" value="删除">
+				</span>
 				<div style="text-align: center;"><img src="" alt="" id="view10" class="fieldImage"></div>
-				<span class="fileItem">修改照片
-					<input type="file" id="file10" accept="image/*" ref="file1" class="fileUpload" @change="showImage('file10','view10')"
-					 name="imageList">
+
+				<p>2、营业执照照片：(若无营业执照时，不需上传；否则必须上传)<input type="button" v-on:click="add2" value=" + "></p>
+				<span class="fileItem itemHidden" ref="addFile2">
+					<input type="file" id="file20" accept="image/*" ref="file2" class="fileUpload" @change="showImage('file20','view20')" name="imageList">
+					 <input type="button" v-on:click="del2" value="删除">
 				</span>
-				<hr>
-
-
-				<p>2、营业执照照片：(若无营业执照时，不需上传；否则必须上传)</p>
 				<div style="text-align: center;"><img src="" alt="" id="view20" class="fieldImage"></div>
-				<span class="fileItem">修改照片
-					<input type="file" id="file20" accept="image/*" ref="file2" class="fileUpload" @change="showImage('file20','view20')"
-					 name="imageList">
-				</span>
-				<hr>
 
 				<p>3、污染工艺照片：<input type="button" v-on:click="add3" value=" + "></p>
 				<div v-for="(list,index) in lists3" :key="list.fileName">
@@ -540,8 +555,8 @@
 		</div>
 
 		<div class="surveyItem">
-			定向核查人员：
-			<input type="text" class="surveyInput" v-model="re_auditor">
+			核查人员：
+			<input type="text" class="surveyInput" v-model="re_auditor" readonly>
 			排查人员1：
 			<input type="text" class="surveyInput" id="cPerson1" v-model="re_inspector1" readonly>
 			排查人员2：
@@ -554,7 +569,7 @@
 
 		<div style="height: 30px;"></div>
 		<div style="text-align: center;">
-			<button class="pullution_button" id="pollutionSubmit" @click="postUpdata()">
+			<button class="pullution_button" id="pollutionSubmit" @click="postPic()" :disabled="submitDisabled">
 				提交
 			</button>
 		</div>
