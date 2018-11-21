@@ -1,0 +1,611 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>环境监管</title>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<link rel="stylesheet" href="css/survey.css">
+</head>
+<body>
+	<div id="apped">
+		<div class="surveyBar">
+			<div>
+				<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+				<span>东莞市工业污染源环境辅助监管信息系统</span>
+			</div>
+		</div>
+		<div class="pullution_nav">
+			选择公司
+		</div>
+		<div>
+			<form action="" ref="theForm">
+				<div>
+					<div class="pollutionItem">
+						<div class="pulltionspan"><span class="red">*</span>镇街：</div>
+						<div>
+							<select name="" id="town" class="pollutionSelect" @change="postCommunity()" v-model="re_town">
+								<option value="">---</option>
+								<option v-bind:value="town.name" v-for="town in towns">{{town.name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="pollutionItem">
+						<div class="pulltionspan"><span class="red">*</span>村/社区：</div>
+						<div>
+							<select name="" id="community" class="pollutionSelect" @change="postCompanys()"  v-model="re_community">
+								<option value="">---</option>
+								<option v-bind:value="community.name" v-for="community in communities">{{community.name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="pollutionItem">
+						<div class="pulltionspan"><span class="red">*</span>公司：</div>
+						<div>
+							<select name="" id="" class="pollutionSelect" v-model="re_coname">
+								<option value="">---</option>
+								<option v-bind:value="company.id" v-for="company in companys">{{company.name}}</option>
+							</select>
+						</div>
+					</div>
+
+				</div>
+				<div style="height: 30px;"></div>
+				<div class="pullution_nav" >
+					填写污染源	
+				</div>
+				<div class="body">
+					<div class="surveyItem">
+						<span class="red">*</span>标签：
+						<select name="tag" id="tags" class="surveySelect" v-model="re_tag">
+							<option value="">---</option>	
+							<option v-bind:value="tag.id" v-for="tag in tags" >{{tag.name}}</option>
+						</select>
+					</div>
+					<div class="pullutionMitem">
+						<div class="pullution_title" onclick="Item_toggle(200,'item1')">
+							污染源类型（可多选）<span id="item1Span"></span>
+						</div>
+						<div id="item1"  class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item1_in" name="" id="noInvolve" value="不涉及" v-model="re_pollutionType"><label for="noInvolve">不涉及</label>
+							</div>
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item1_in" name="" value="涉水" id="noInvolveWater"v-model="re_pollutionType"><label for="noInvolveWater">涉水</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="checkbox" class="item1_in" name="" value="涉气" id="noInvolveGas" v-model="re_pollutionType">涉气</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="checkbox" class="item1_in" name="" value="涉噪音" v-model="re_pollutionType">涉噪音</label>
+							</div>
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item1_in" name="" value="涉危废" id="noInvolveDanger" v-model="re_pollutionType"><label for="noInvolveDanger">涉危废</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title" onclick="Item_toggle(380,'item2')">产品类型（可多选）<span id="item2Span"></span></div>
+						<div id="item2" class="hidden_item">
+							<div class="pullutionMchild"  v-for="item in products">
+								<label><input type="checkbox" v-bind:value="item.name" class="item1_in" v-model="re_productType">{{item.name}}</label>
+							</div>
+							<input type="text" id="item2_input" v-model="re_otherProductType">
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title" onclick="Item_toggle(380,'item3')">主要生产工艺（可多选)<span id="item3Span"></span></div>
+						<div id="item3"  class="hidden_item">
+							<div class="pullutionMchild"  v-for="item in technologys">
+								<label><input type="checkbox" v-bind:value="item.name" class="item3_in" v-model="re_technology">{{item.name}}</label>
+							</div>
+							<input type="text" id="item3_input" v-model="re_otherTechnology">
+						</div>
+					</div>
+
+					<div class="pullutionMitem itemHidden" id="item4_div">
+						<div class="pullution_title " onclick="Item_toggle(150,'item4')" >废水处理情况：<span id="item4Span"></span></div>
+						<div id="item4"  class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item4_in" value="无" hidden checked v-model="re_wastewaterTreatment">
+								<label><input type="checkbox" class="item4_in" value="自建污水处理设施" v-model="re_wastewaterTreatment">自建污水处理设施</label>
+							</div>
+							<div  class="pullutionMchild">
+								<label><input type="checkbox" class="item4_in" value="转移处理" v-model="re_wastewaterTreatment">转移处理</label>
+								<div>
+									<span>接收单位：</span><input type="text" id="item4_input" v-model="re_waterAcceptComp">
+								</div>
+							</div>
+							<div class="pullutionMchild">
+								<label> <input type="checkbox" class="item4_in" value="未处理直接排放" v-model="re_wastewaterTreatment">未处理直接排放</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem itemHidden" id="item5_div">
+						<div class="pullution_title" onclick="Item_toggle(220,'item5')">
+							废气类型（可多选）<span id="item5Span"></span>
+						</div>
+						<div id="item5" class="hidden_item">
+							<input type="checkbox" class="item5_in" value="无" hidden checked>
+							<div class="pullutionMchild" v-for="wasteGas in wasteGases">
+								<label ><input type="checkbox" v-bind:value="wasteGas.name" class="item5_in" v-model="re_exhaustGasType">{{wasteGas.name}}</label>
+							</div>
+							<input type="text" id="item5_input" v-model="re_otherExhaustGasType">
+						</div>
+					</div>
+
+					<div class="pullutionMitem itemHidden" id="item6_div">
+						<div class="pullution_title" onclick="Item_toggle(140,'item6')" >
+							废气处理情况<span id="item6Span"></span>
+						</div>
+						<div id="item6" class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item6_in" value="无" hidden checked v-model="re_wasteGasTreatment">
+								<label><input type="radio" name="feiqi" value="未处理直接排放" class="item6_in" v-model="re_wasteGasTreatment">未处理直接排放</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="radio" name="feiqi" value="经处理后排放" class="item6_in" v-model="re_wasteGasTreatment">经处理后排放</label>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="pullutionMitem itemHidden" id="item7_div">
+						<div class="pullution_title" onclick="Item_toggle(120,'item7')">
+							危险废物贮存情况<span id="item7Span"></span>
+						</div>
+						<div id="item7" class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item7_in" value="无" hidden checked v-model="re_hazardousWasteStorage">
+								<label><input type="radio" value="不规范" name="guifan" class="item7_in" v-model="re_hazardousWasteStorage">不规范</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="radio" value="规范" name="guifan" class="item7_in" v-model="re_hazardousWasteStorage">规范</label>
+							</div>
+						</div>
+					</div>
+					<!-- 注意解决下面这段代码 还没有绑定！ -->
+					<div class="pullutionMitem itemHidden" id="item8_div">
+						<div class="pullution_title" onclick="Item_toggle(120,'item8')">
+							危险废物合同签订<span id="item8Span"></span>
+						</div>
+						<div id="item8" class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item8_in" value="无" hidden checked>
+								<label><input type="radio" name="turn" class="item8_in" value="已签订" v-model="hazardousStorageSign">已签订</label>
+								<div>
+									<span id="item8ChildSpan"></span><span>是否过期：</span>
+									<label><input type="radio" value="是" name="guoqi" class="item8_in_radio">是</label>
+									<label><input type="radio" value="否" name="guoqi" class="item8_in_radio">否</label>
+								</div>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="radio" value="未签订" name="turn" class="item8_in">未签订</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem itemHidden" id="item9_div">
+						<div class="pullution_title" onclick="Item_toggle(140,'item9')">
+							危险废物转移情况<span id="item9Span"></span>
+						</div>
+						<div id="item9" class="hidden_item">
+							<div class="pullutionMchild">
+								<input type="checkbox" class="item9_in" value="无" hidden checked v-model="re_hazardousWasteTransfer">
+								<label><input type="radio" value="不规范" name="turnTransfer" class="item9_in" v-model="re_hazardousWasteTransfer">不规范</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="radio" value="规范" name="turnTransfer" class="item9_in" v-model="re_hazardousWasteTransfer">规范</label>
+								<div>
+									<span id="item9ChildSpan"></span>
+									<span>接收单位：</span>
+									<input type="text" id="item9_input" v-model="re_hazardousAcceptComp">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="pullutionMitem">
+						<div class="pullution_title" onclick="Item_toggle(160,'item10')">
+							处理情况（可多选）<span id="item10Span"></span>
+						</div>
+						<div id="item10" class="hidden_item">
+							<div class="pullutionMchild">
+								<label><input type="checkbox" value="上报整改" class="item10_in" v-model="re_treat">上报整改</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="checkbox" value="跟踪整改" class="item10_in" v-model="re_treat">跟踪整改</label>
+							</div>
+							<div class="pullutionMchild">
+								<label><input type="checkbox" value="不需整改" class="item10_in" v-model="re_treat">不需整改</label>
+							</div>
+							<div class="pullution_textarea" id="zhenggai_textarea">
+								<textarea ref="problemTextarea" name="" id="pollutionProblem" cols="40" rows="5" value="" placeholder="存在问题和处理建议" v-model="re_problem"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="height: 30px;"></div>
+				<!-- 检查时间  数据库表中无此项 -->
+				<div class="pullution_nav">
+					现场及人员信息	
+				</div>
+				<div class="surveyItem">
+					<span class="red">*</span>检查时间：
+					<input type="date" id="verifyTime" >
+				</div>
+				<div class="surveyItem" >
+					<span class="red">*</span>定向审核人员：
+					<input type="text" class="surveyInput" id="verifier" v-model="re_checkPerson">
+				</div>
+				<div class="surveyItem" >
+					<span class="red">*</span>排查人员1：
+					<input type="text" class="surveyInput" id="cPerson1" v-model="re_inspector1">
+					<span class="red">*</span>排查人员2：
+					<input type="text" class="surveyInput" id="cPerson2" v-model="re_inspector2">
+				</div>
+				<div class="surveyItem" >
+					<p><span class="red">*</span>现场照片：</p>
+					<p >1、厂门口照片：</p>
+					<input type="file" id="fieldFile1" class="surveyInput" accept="image/*" v-model="re_picture1"><br>
+					<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+					<p >2、污染工艺照片：</p>
+					<input type="file" id="fieldFile2" class="surveyInput" accept="image/*" v-model="re_picture2"><br>
+					<div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+					<p >3、污染防治设施照片：</p>
+					<input type="file" id="fieldFile3" class="surveyInput" accept="image/*" v-model="re_picture3"><br>
+					<div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+					<p>4、排放口照片：</p>
+					<input type="file" id="fieldFile4" class="surveyInput" accept="image/*" v-model="re_picture4"><br>
+					<div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+				</div>
+				<div style="height: 30px;"></div>
+				<div class="pullution_button" id="pollutionSubmit" @click="postUp()">
+					提交
+				</div>
+			</div>
+		</form></div>
+		<div style="height: 100px;"></div>
+		<script src="js/pollution.js"></script>
+		<script>
+			window.onload=function(){
+				var vme=new Vue({
+					el: '#apped',
+					data: {
+						towns:[],
+						tags:[],
+						communities:[],
+						companys:[],
+						products:[],
+						technologys:[],
+						code:[],
+						wasteGases:[],
+						re_town:[],
+						re_community:[],
+						re_coname:[],
+						re_tag:[],
+						re_pollutionType:[],
+						re_productType:[],
+						re_otherProductType:[],
+						re_technology:[],
+						re_otherTechnology:[],
+						re_wastewaterTreatment:[],
+						re_waterAcceptComp:[],
+						re_exhaustGasType:[],
+						re_otherExhaustGasType:[],
+						re_wasteGasTreatment:[],
+						re_hazardousWasteStorage:[],
+						re_hazardousAcceptComp:[],
+						hazardousStorageSign: [],
+						re_hazardousStorageSign:[],
+						re_hazardousWasteTransfer:[],
+						re_treat:[],
+						re_problem:[],
+						re_checkPerson:[],
+						re_inspector1:[],
+						re_inspector2:[],
+						re_picture1:[],
+						re_picture2:[],
+						re_picture3:[],
+						re_picture4:[]
+					},
+					watch: {
+						re_treat:function(val){
+							if(val.indexOf('不需整改') > -1){
+								this.re_problem="";
+								this.$refs.problemTextarea.style.display='none';
+							} else {
+								this.$refs.problemTextarea.style.display='block';
+							}
+						},
+						re_pollutionType: function(val) {
+							console.log(val);
+							if(val.indexOf('涉水') == -1) {
+								this.re_wastewaterTreatment = [];
+								this.re_waterAcceptComp = '';
+							} else if(val.indexOf('涉水') > -1) {
+								if(this.re_wastewaterTreatment.indexOf('转移处理') == -1) {
+									this.re_waterAcceptComp = '';
+								}
+							}
+							if(val.indexOf('涉气') == -1) {
+								console.log("12");
+								this.re_exhaustGasType = [];
+								this.re_otherExhaustGasType = '';
+								this.re_wasteGasTreatment = [];
+							} else if(val.indexOf('涉气') > -1) {
+								if(this.re_exhaustGasType.indexOf('其他') == -1) {
+									this.re_otherExhaustGasType = '';
+								}
+							}
+							if(val.indexOf('涉危废') == -1) {
+								this.re_hazardousWasteStorage = '';
+								this.re_hazardousAcceptComp = '';
+								this.re_hazardousStorageSign = '';
+								this.re_hazardousWasteTransfer = '';
+							} else if(val.indexOf('涉危废') > -1) {	
+								if(this.hazardousStorageSign === '是') {
+									this.re_hazardousStorageSign = '已签订,已过期';
+								} else if(this.hazardousStorageSign === '否') {
+									this.re_hazardousStorageSign = '已签订,未过期';
+								} else {
+									this.re_hazardousStorageSign = '未签订';
+								}
+
+								if(this.re_hazardousWasteTransfer === '不规范') {
+									this.re_hazardousAcceptComp = '';
+								}
+							} 
+						},
+						re_productType: function (val) {
+							console.log(val);
+							if(val.indexOf('其他') == -1) {
+								this.re_otherProductType = '';
+							}
+						},
+						re_technology: function(val) {
+							console.log(val);
+							if(val.indexOf('其他') == -1) {
+								this.re_otherTechnology = '';
+							}
+						}
+					},
+					methods:{
+						postData:function(){
+		        //发送 post 请求
+		        var storage=window.localStorage;
+		        var userid=storage.getItem("userId");
+		        let param={userId:userid};
+		        let headers={"content-type":"application/json"};
+		        let url;
+		        var results;
+				//获取镇街
+				url="https://dgutxm.cn/wuranyuan-server/getAllPollutionTown";
+				this.$http.post(url,param,headers,{emulateJSON:true}).then(function(res){
+					results=res.body;
+					for(var i=0;i<results.length;i++){
+
+						this.$data.towns.push({name:results[i].toString(i)});
+						//console.log(this.$data.towns[i].name);
+					}
+				},function(res){
+					console.log(res.statu);
+					alert("获取数据失败，请与管理员联系!");
+				});
+				//获取产品类型
+				url="https://dgutxm.cn/wuranyuan-server/getAllProductTypes";
+				this.$http.post(url,param,headers,{emulateJSON:true}
+					).then(function(res){
+						results=res.body;
+						for(var i=0;i<results.length;i++){
+							console.log(results[i].name);
+							this.$data.products.push({name:results[i].name});
+						}      
+					},function(res){
+						console.log(res.statu);
+					});
+		                //获取生产工艺类型
+		                url="https://dgutxm.cn/wuranyuan-server/getAllCraftsTypes";
+		                this.$http.post(url,param,headers,{emulateJSON:true}
+		                	).then(function(res){
+		                		results=res.body;
+		                		for(var i=0;i<results.length;i++){
+		                			this.$data.technologys.push({name:results[i].name});
+		                		} 
+		                	},function(res){
+		                		console.log(res.statu);
+		                	});
+		                //获取标签
+		                url="https://dgutxm.cn/wuranyuan-server/getAllPollutionTags";
+		                this.$http.post(url,param,
+		                	headers,{emulateJSON:true}
+		                	).then(function(res){
+		                		var results=res.body;
+		                		for(var i=0;i<results.length;i++){
+							//console.log(results[i].name);
+							this.$data.tags.push({name:results[i].name,id:results[i].id});
+						}
+
+					},function(res){
+						console.log(res.statu);
+					});
+		                 //获取废气类型
+		                 url="https://dgutxm.cn/wuranyuan-server/getAllExhaustGasTypes";
+		                 this.$http.post(url,param,headers,{emulateJSON:true}
+		                 	).then(function(res){
+		                 		results=res.body;
+		                 		for(var i=0;i<results.length;i++){
+		                 			this.$data.wasteGases.push({name:results[i].name});
+		                 		} 
+		                 	},function(res){
+		                 		console.log(res.statu);
+		                 	});
+		                 },
+		          //根据镇街获取社区
+		          postCommunity:function(){
+		          	var storage=window.localStorage;
+		          	var userid=storage.getItem("userId");
+		          	var towns=document.getElementById("town");
+		          	var theTowm;
+		          	this.$data.communities=[];
+		          	for (var i = towns.length - 1; i >= 0; i--) {
+		          		if(towns.options[i].selected==true){
+		          			theTowm=towns.options[i].value;
+		          			break;
+		          		}
+		          	}
+		          	let param={condition:theTowm,userId:userid};
+		          	let headers={"content-type":"application/json"};
+		          	let url="https://dgutxm.cn/wuranyuan-server/getAllPollutionCommunity";
+		          	this.$http.post(url,param,
+		          		headers,{emulateJSON:true}
+		          		).then(function(res){
+		          			var results=res.body;
+		          			for(var i=0;i<results.length;i++){
+							//console.log(results[i].community);
+							this.$data.communities.push({name:results[i].community});                                  
+						}
+					},function(res){
+						console.log(res.statu);
+					});
+		          	},
+           		//根据企业信息
+           		postCompanys:function(){
+           			var storage=window.localStorage;
+           			var userid=storage.getItem("userId");
+	  		  		/*var towns=document.getElementById("town");
+	  		  		var theTowm;
+	  		  		this.$data.communities=[];
+	  		  		console.log(towns);
+	  		  		for (var i = towns.length - 1; i >= 0; i--) {
+	  		  			if(towns.options[i].selected==true){
+	  		  				console.log(towns.options[i].value);
+	  		  				theTowm=towns.options[i].value;
+	  		  				break;
+	  		  			}
+	  		  		}*/
+	  		  		//清空原来的数据
+	  		  		this.$data.companys=[];
+	  		  		let param={userId:userid};
+	  		  		let headers={"content-type":"application/json"};
+	  		  		let url="https://dgutxm.cn/wuranyuan-server/getCompanys";
+	  		  		console.log(param);
+	  		  		this.$http.post(url,param,
+	  		  			headers,{emulateJSON:true}
+	  		  			).then(function(res){
+	  		  				var results=res.body;
+	  		  				for(var i=0;i<results.length;i++){
+	  		  					console.log(results[i].name);
+	  		  					this.$data.companys.push({name:results[i].name,id:results[i].id});                                  
+	  		  				}
+	  		  			},function(res){
+	  		  				console.log(res.status);
+	  		  			});
+	  		  		},
+           		//显示或隐藏核查问题文本框
+
+           		postUp:function(){
+           			var storage=window.localStorage;
+           			var userid=storage.getItem("userId");
+
+           				
+   /*        				for (var i = this.$refs.theForm.elements.length - 1; i >= 0; i--) {
+           					if(this.$refs.theForm.elements[i].value instanceof Array && this.$refs.theForm.elements[i].value.length==0){
+           						console.log("123");
+           						this.$refs.theForm.elements[i].focus();
+           						alert("表单项填写不完整！");
+           						return;
+           					}
+           				}
+*/
+           			let param={userId:userid,
+           				town:this.$data.re_town,
+           				tag:this.$data.re_tag,
+           				pollutionType:this.$data.re_pollutionType.join(","),
+           				otherProductType:this.$data.re_otherProductType,
+           				productType:this.$data.re_productType.join(","),
+		        		//this.$data.re_otherProductType,
+		        		technology:this.$data.re_technology.join(","),
+		        		otherTechnology:this.$data.re_otherTechnology,
+		        		wastewaterTreatment:this.$data.re_wastewaterTreatment == '' ? '' : this.$data.re_wastewaterTreatment.join(","),
+		        		waterAcceptComp:this.$data.re_waterAcceptComp,
+		        		exhaustGasType:this.$data.re_exhaustGasType == '' ? '' : this.$data.re_exhaustGasType.join(","),
+		        		otherExhaustGasType:this.$data.re_otherExhaustGasType,
+		        		wasteGasTreatment:this.$data.re_wasteGasTreatment,
+		        		hazardousAcceptComp:this.$data.re_hazardousAcceptComp,
+		        		hazardousStorageSign:this.$data.re_hazardousStorageSign,
+		        		hazardousWasteStorage:this.$data.re_hazardousWasteStorage,
+		        		hazardousWasteTransfer:this.$data.re_hazardousWasteTransfer,
+		        		treat:this.$data.re_treat.join(","),
+		        		problem:this.$data.re_problem,
+		        		companyId:10,
+		        		//this.$data.re_problem,
+		        		auditor:this.$data.re_checkPerson,
+		        		inspector1:this.$data.re_inspector1,
+		        		inspector2:this.$data.re_inspector2
+		        	};
+		        	console.log(param);
+		        	let headers={"Accept":"application/json","content-type":"application/json"};
+		        	let url="https://dgutxm.cn/wuranyuan-server/insertOnePollutionResearch";
+		        	this.$http.post(url,param,
+		        		headers,{emulateJSON:true}
+		        		).then(function(res){
+		        		 var str=res.body;
+                         if(str.code=="00"){alert("污染排查表填写完成！");
+                         window.location="menu.html";}else{ alert(str.code+","+str.message);}
+
+		        		},function(res){
+		        			console.log(res.status);
+		        		});
+		        	}
+		        }
+		    })
+window.onload=vme.postData();
+window.setTimeout(check,500);
+}
+</script>
+</div>
+</body>
+</html>
+
+<!-- 
+	// 污染源类型
+	pollutionType;
+	// 产品类型
+	productType;
+	otherProductType;
+	// 主要生产工艺
+	technology;
+	otherTechnology;
+	// 废水处理情况
+	wastewaterTreatment;
+	// 接受单位
+	waterAcceptComp;
+	// 废气类型
+	exhaustGasType;
+	otherExhaustGasType;
+	// 废气处理情况
+	wasteGasTreatment;
+	// 危险废物贮存情况
+	hazardousWasteStorage;
+	// 危险废物转移情况
+	hazardousWasteTransfer;
+	// 接受单位
+	hazardousAcceptComp;
+	// 危险废物合同签订
+	hazardousStorageSign;
+	// 存在问题及建议
+	problem;
+	// 处理情况
+	treat;
+	// 排查人员
+	inspector1;
+	inspector2;
+	picture1;
+	picture2;
+	picture3;
+	picture4; -->

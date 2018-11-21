@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<script src="js/pollution.js"></script>
+	<title>环境监管</title>
+	<link rel="stylesheet" href="css/survey.css">
+	<link rel="stylesheet" href="css/display.css">
+</head>
+<style>
+
+	.customers
+  	{
+  		font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+  		width:100%;
+  		border-collapse:collapse;
+  	}
+
+	.customers td, .customers th 
+ 	{
+ 		font-size:1.1em;
+  		border:1px solid #638fbb;
+ 		padding:3px 7px 2px 7px;
+ 		text-align: center;
+ 		padding: 10px;
+  	}
+
+	.customers th 
+  	{
+  		font-size:1.2em;
+  		text-align:center;
+  		padding-top:5px;
+  		padding-bottom:4px;
+ 		background-color:#638fbb;
+ 		color:#ffffff;
+  	}
+
+
+  	.examinePre_nav{
+		width: 70%;
+		margin-bottom: 10px;
+		height: 25px;
+		border-radius: 0 16px 16px 0;
+		font-size:20px;
+		font-weight: bold;
+		margin-top:30px;
+  	}
+</style>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div style="margin-top:80px">
+
+	</div>
+	<div id="app">
+		<div class="pullution_nav examinePre_nav" onclick="Item_toggle(180,'hadCheck')">
+			未审核的污染源排查表
+		</div>
+
+
+		<div id="hadCheck" class="hidden_item">
+			<table class="customers">
+				<tr>
+				  	<th>企业名称</th><th>污染源编号</th>
+				</tr>   
+				<tr v-for="item in pollutionItem" onclick="window.location.href='examineModifier.html'">
+					<td>{{item.pollutionResearch.company.name}}</td><td>{{item.pollutionResearch.no}}</td>
+				</tr>
+			</table>
+		</div>
+
+
+		<div class="pullution_nav examinePre_nav" onclick="Item_toggle(180,'noCheck')">
+			已审核的污染源排查表	
+		</div>
+
+
+		<div id="noCheck" class="hidden_item">
+			<table class="customers">
+				<tr>
+				  	<th>企业名称</th><th>污染源编号</th>
+				</tr>   
+			<!-- 	<tr onclick="window.location.href='examineCheck.html'">
+				  	<td>东莞市松山湖</td><td>sssh223</td>
+				</tr>
+				<tr onclick="window.location.href='examineCheck.html'">
+					<td>东莞市松山湖东莞理工学院</td>
+				</tr>
+				<tr onclick="window.location.href='examineCheck.html'">				
+					<td>东莞市松山湖</td>
+				</tr> -->
+			</table>
+		</div>
+	</div>
+	<script>
+		window.onload=function(){
+			var vm=new Vue({
+				el: '#app',
+				data: {
+					pollutionItem:[]
+				},
+				methods:{
+					postCommunity:function(flag){
+						var storage=window.localStorage;
+						
+				  		var userId=storage.getItem("userId");
+						let param={userId:userId,step:flag};
+		        		let headers={"content-type":"application/json"};
+		        		let url="https://dgutxm.cn/wuranyuan-server/getPollutionResearch";
+		        		this.$http.post(url,param,headers,{emulateJSON:true}).then(function(res){
+		                	var	results=res.body;
+		                	this.$data.pollutionItem=results;
+		            		console.log(results);
+		                },function(res){
+		                    console.log(res.statu);
+		                    alert("获取数据失败，请与管理员联系!");
+		                });
+					},
+				}
+			});
+			window.onload=vm.postCommunity(false);
+		}
+	</script>
+</body>
+</html>

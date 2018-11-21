@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>环境监管</title>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<link rel="stylesheet" href="css/survey.css">
+	<link rel="stylesheet" href="css/display.css">
+</head>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div  id="app">
+		<div class="pullution_nav">
+			选择企业	
+		</div>
+		<div class="surveyItem" >
+		    <span class="red">*</span>镇街
+			<select name="" id="" class="surveySelect">
+				<option value="">---</option>
+				<option value=" " v-for="item in towns">{{item.name}}</option>
+			</select>
+		</div>
+		<div class="surveyItem">
+			<span class="red">*</span>村/社区
+			<select name="" id="" class="surveySelect">
+				<option value="">---</option>
+				<option value=" " v-for="item in communities">{{item.name}}</option>
+			</select>
+		</div>
+		<div class="surveyItem">
+			<span class="red">*</span>企业
+			<select name="" id="" class="surveySelect">
+				<option value="">---</option>
+				<option value=" " v-for="item in companys">{{item.name}}</option>
+			</select>
+		</div>
+		<div style="height: 30px;"></div>
+		<div class="pullution_nav">
+			此公司污染审查报告	
+		</div>
+		<!-- 显示信息部分 -->
+		<div class="surveyItem" style="height:400px;overflow: auto;">
+			<div id="app">
+				<form action="" id="enterpriseForm">
+			<div class="displayTitle">现场摸排情况</div>
+			<div class="displayItem">
+				<span class="red">▶</span>镇街:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>村/社区:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>污染源编号:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>标签:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>地址:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>定位:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>企业名称:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>法定代表人/经管者:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>联系电话:	<span>7697885421</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>环保负责人:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>联系电话:	<span>7697885421</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>营业执照:	
+				<span>有</span>
+				<span></span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>环保手续:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>行业类型:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>污染源类型:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>产品类型:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>主要生产工艺:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>废水
+				<div>&nbsp;&nbsp;&nbsp;处理情况：<span>11</span></div>
+				<span></span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>废气
+				<div>&nbsp;&nbsp;&nbsp;废气类型：<span>11</span></div>
+				<div>&nbsp;&nbsp;&nbsp;处理情况：<span>22</span></div>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>危险废物
+				<div>&nbsp;&nbsp;&nbsp;贮存情况：<span>11</span></div>
+				<div>&nbsp;&nbsp;&nbsp;合同签订：<span>22</span></div>
+				<div>&nbsp;&nbsp;&nbsp;转移情况：<span>33</span></div>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>排污许可证:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>环境应急预案:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>处理情况:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>存在问题和处理建议:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>检查日期:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>定向审核人员:	<span>xxx</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>现场排查人员<div>&nbsp;&nbsp;&nbsp;1.xxx</div>  <div>&nbsp;&nbsp;&nbsp;2.xxx</div>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>现场照片	
+				<div>&nbsp;&nbsp;&nbsp;厂门口<img src="#"></div>
+				<div>&nbsp;&nbsp;&nbsp;污染工艺<img src="#"></div>
+				<div>&nbsp;&nbsp;&nbsp;污染防治措施<img src="#"></div>
+				<div>&nbsp;&nbsp;&nbsp;排放口<img src="#"></div>
+			</div>
+			<div class="displayTitle">整治阶段</div>
+			<div class="displayItem">
+				<span class="red">▶</span>现场核实时间:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>建议整治措施:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>建议整改时限:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>整改情况:	<span>东莞市松山湖</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>是否完成整改:	<span>是</span>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>现场照片:	<div><span>&nbsp;&nbsp;&nbsp;问题及照片</span><img src="#"></div>
+			</div>
+			<div class="displayItem">
+				<span class="red">▶</span>责任人	<div>&nbsp;&nbsp;&nbsp;1.xxx</div>  <div>&nbsp;&nbsp;&nbsp;2.xxx</div>
+			</div>
+				</form>
+			</div>
+		</div>
+		
+		<div style="height: 100px;"></div>
+	</div>
+	<script>
+	window.onload=function(){
+			var vm=new Vue({
+				el: '#app',
+				data: {
+					 towns:[],
+		    			communities:[],
+		    			companys:[],
+				},
+				methods:{
+					postDate:function(){
+						var storage=window.localStorage;
+				  		var userid=storage.getItem("userId");
+		        		let param={userId:userid};
+		        		let headers={"content-type":"application/json"};
+		        		let url="https://dgutxm.cn/wuranyuan-server/getAllPollutionTown";
+		        		console.log("run in here");
+		        		this.$http.post(url,param,headers,{emulateJSON:true}).then(function(res){
+		                		var	results=res.body;
+		                		console.log(results);
+		                for(var i=0;i<results.length;i++){
+
+		                this.$data.towns.push({name:results[i].toString(i)});
+		                 }
+		                },function(res){
+		                    console.log(res.status);
+		                    alert("获取数据失败，请与管理员联系!");
+		                });
+					}
+				}
+			})
+			window.onload=vm.postDate();
+		}
+	</script>
+	<script src="js/verification.js"></script>
+</body>
+</html>

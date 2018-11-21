@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Gm7uy71EWAxRo2qhcaBPGl7tKoVv9eXR"></script>
+	<title>环境监管</title>
+	<link rel="stylesheet" href="css/survey.css">
+	<link rel="stylesheet" href="css/display.css">
+</head>
+	<script>
+		function Return(){
+			location.href='examinePre.html';
+			window.event.returnValue=false;
+		}
+	</script>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div class="surveyItem" style="margin-top:10px;text-align: center;">
+		<span>企业名称：</span>
+		<span id="companyName">松山湖管委会</span><br>
+
+		<div style="margin-top:15px">
+			<span >污染源编号：</span>
+			<span id="pollutionNo">ssg松山湖123</span>
+		</div>
+	</div>
+
+	<div class="pullution_nav">
+		此公司污染排查报告	
+	</div>
+
+	<div class="surveyItem" >
+		<div id="app">
+			<form action="" id="enterpriseForm">
+				<div class="displayItem">
+					<span class="red">▶</span>镇街:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>村/社区:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>污染源编号:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>标签:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>地址:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>定位:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>企业名称:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>法定代表人/经营者:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>联系电话:	<span>7697885421</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>环保负责人:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>联系电话:	<span>7697885421</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>营业执照:	
+					<span>有</span>
+					<span>无</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>环保手续:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>行业类型:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>污染源类型:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>产品类型:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>主要生产工艺:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>废水
+					<div>&nbsp;&nbsp;&nbsp;处理情况：<span>11</span></div>
+					<span></span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>废气
+					<div>&nbsp;&nbsp;&nbsp;废气类型：<span>11</span></div>
+					<div>&nbsp;&nbsp;&nbsp;处理情况：<span>22</span></div>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>危险废物
+					<div>&nbsp;&nbsp;&nbsp;贮存情况：<span>11</span></div>
+					<div>&nbsp;&nbsp;&nbsp;合同签订：<span>22</span></div>
+					<div>&nbsp;&nbsp;&nbsp;转移情况：<span>33</span></div>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>排污许可证:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>环境应急预案:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>处理情况:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>存在问题和处理建议:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>检查日期:	<span>东莞市松山湖</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>现场排查人员<div>&nbsp;&nbsp;&nbsp;1.xxx</div>  <div>&nbsp;&nbsp;&nbsp;2.xxx</div>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>现场照片	
+					<div>&nbsp;&nbsp;&nbsp;1、厂门口<br>
+						<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+					</div>
+					<div>&nbsp;&nbsp;&nbsp;2、污染工艺<br>
+						<div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+					</div>
+					<div>&nbsp;&nbsp;&nbsp;3、污染防治措施<br>
+						<div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+					</div>
+					<div>&nbsp;&nbsp;&nbsp;4、排风口<br>
+						<div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+					</div>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>审核日期:<span>2018.11.1</span>
+				</div>
+				<div class="displayItem">
+					<span class="red">▶</span>审核人：<span>张三</span>
+				</div>
+				<div class="displayItem" style="margin-top:20px;text-align: center;">
+					<button onclick="Return();" class="pullution_button" id="pollutionModifier" style="width:100px;">
+						返回
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</html>

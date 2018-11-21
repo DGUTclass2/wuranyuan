@@ -1,0 +1,484 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+	
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Gm7uy71EWAxRo2qhcaBPGl7tKoVv9eXR"></script> 
+	<title>环境监管</title>
+	<link rel="stylesheet" href="css/survey.css">
+</head>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div class="surveyForm" id="app"> 
+		<form action="https://dgutxm.cn/wuranyuan-server/insertOnePollutionResearch" id="enterpriseForm" method="post">
+			<div class="surveyItem">
+						<span class="red">*</span>镇街
+						<select name="town" id="town" class="surveySelect" v-model="re_town" @change="postCommunity()">
+							<option value="">---</option>
+							<option v-bind:value="town.name" v-for="town in towns">{{town.name}}</option>
+						</select>
+			</div>
+			<div class="surveyItem">
+						<span class="red">*</span>村/社区
+						<select name="community" id="" class="surveySelect" v-model="re_community">
+							<option value="">---</option>
+							<option v-bind:value="community.name" v-for="community in communities">{{community.name}}</option>
+						</select>
+			</div>
+<!-- 			<div class="surveyItem">
+				<span class="red">*</span>标签：
+				<select name="tag" id="tags" class="surveySelect">
+					<option value="">---</option>	
+					<option v-bind:value="tag.name" v-for="tag in tags">{{tag.name}}</option>
+				</select>
+			</div> -->
+			<div class="surveyItem">
+				<span class="red">*</span>地址
+				<input type="text" class="surveyInput" id="address" name="address" v-model="re_address">
+				<span id="addressSpan" class="surveyTip"></span><br>
+				<span class="surveyTip">XX路XX号</span>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<div class="surveyButton" id="getLocation">定位</div>
+					<span>经度：
+						<input type="text" readonly class="lngAndlat" id="lngAndlat1" name="longitude" v-model="re_longitude">
+					</span>
+
+					<span>纬度：
+						<input type="text" readonly class="lngAndlat" id="lngAndlat2" name="latitude" >
+					</span>
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>企业名称
+				<input type="text" class="surveyInput" id="enterprise"  name="name" v-model="re_name">
+				<span class="surveyTip" id="enterpriseSpan"></span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>法定代表人/经营者:
+				<input type="text" placeholder="姓名" class="surveyInput" name="legalRepresentative" id="leReName" v-model="re_legalRepresentative">
+				<span class="surveyTip" id="leReNameSpan"></span><br>
+				<input type="text" placeholder="联系电话" class="surveyInput" name="legalRePhone" id="leReIpone" v-model="re_legalRePhone">
+				<span class="surveyTip" id="leReIponeSpan"></span><br>
+				<span class="surveyTip">联系电话为11位手机，或769-xxxxxxx固话形式</span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环保负责人:
+				<input type="text" placeholder="姓名" class="surveyInput" name="envirRepresentative" id="enReName" v-model="re_envirRepresentative">
+				<span class="surveyTip" id="enReNameSpan"></span><br>
+				<input type="text" placeholder="联系电话" class="surveyInput" name="envirRePhone" id="enReIpone" v-model="re_envirRePhone">
+				<span class="surveyTip" id="enReIponeSpan"></span><br>
+				<span class="surveyTip">联系电话为11位手机，或769-xxxxxxx固话形式</span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>营业执照:
+				<input type="radio" name="hasLicence" class="surveyRadio BusiLicense" id="LicenseOff" value="无" v-model="re_hasLicence">无 
+				<input type="radio" name="hasLicence" class="surveyRadio BusiLicense" id="LicenseOn" value="有" v-model="re_hasLicence">有
+				<div id="USCCode" class="itemHidden">
+					<input type="text" name="uscCode" placeholder="统一社会信用代码" class="surveyInput" id="USCCodeValue" v-model="re_uscCode">
+					<span class="surveyTip" id="USCCodeValueSpan"></span><br>
+					<span class="surveyTip">如：91440106732959639W</span>
+				</div>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环保手续:
+				<input type="radio" name="envirProcedures1" class="surveyRadio EnvirProdure" id="EnvirProdureOff" value="无">无 
+				<input type="radio" name="envirProcedures1" class="surveyRadio EnvirProdure" id="EnvirProdureOn" value="有">有
+				<!-- 审批和验收 -->
+				<select name="envirProcedures" id="examine" class="surveySelect itemHidden" v-model="re_envirProcedures">
+					<option value="" >---</option>
+					<option hidden="hidden" value="无">无</option>
+					<option v-bind:value="procedure.name" v-for="procedure in procedures">{{procedure.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>行业类型：门类
+				<span>
+					<select  id="industries1" class="surveySelect" @change="postindustries2()">
+						<option value="">---</option>
+						<option v-bind:value="industry.type" v-for="industry in industries1">{{industry.name}}</option>
+					</select>
+				</span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>行业类型：大类
+				<span>
+					<select  id="industries2" class="surveySelect" @change="postindustries3()">
+						<option value="">---</option>
+						<option v-bind:value="industry.type" v-for="industry in industries2" >{{industry.name}}</option>
+					</select>
+				</span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>行业类型：中类
+				<span>
+					<select name="tradeType" id="industries3" class="surveySelect"  @change="postindustries4()">
+						<option value="">---</option>
+						<option v-bind:value="industry.type" v-for="industry in industries3">{{industry.name}}</option>
+					</select>
+				</span>
+			</div>
+      <div class="surveyItem">
+        <span class="red">*</span>行业类型：小类
+        <span>
+          <select name="tradeType" id="industries4" class="surveySelect" v-model="re_tradeType">
+            <option value="">---</option>
+            <option v-bind:value="industry.no" v-for="industry in industries4">{{industry.name}}</option>
+          </select>
+        </span>
+      </div>
+			<div class="surveyItem">
+				<span class="red">*</span>排污许可证：
+				<select name="sewagePermit" id="" class="surveySelect" v-model="re_sewagePermit">
+					<option value="">---</option>
+					<option v-bind:value="approval.name" v-for="approval in approvals">{{approval.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环境应急预案：
+				<select name="" id="record" class="surveySelect">
+					<option value="">---</option>
+					<option v-bind:value="record.name" v-for="record in records">{{record.name}}</option>
+				</select>
+				<div id="Choice" class="itemHidden">
+				<span class="red">*</span>是否过期：
+				<select name="emergencyPlan" class="surveySelect" id="isOut">
+					<option value="">---</option>
+					<option hidden="hidden" value="无">无</option>
+					<option v-bind:value="'已备案-'+Choice.name" v-for="Choice in Choices">{{Choice.name}}</option>
+				</select>
+				</div>
+			</div>
+			<div class="surveyItem" >
+				<div class="surveyLocation">
+					<div class="surveyButton" id="surveySubmit" @click="post()" >提交</div>
+				</div>
+			</div>
+
+		</form>
+		<div style="height: 100px;"></div>
+	</div>
+
+
+<script>
+window.onload = function(){
+ 
+var vm=new Vue({
+  el: '#app',
+  data: {
+    communities:[],
+    towns: [],
+    industries1: [],
+    industries2: [],
+    industries3: [],
+    industries4: [],
+    approvals:[
+    		{name: '已领取国家排污许可证' },
+    		{name: '已领取省排污许可证' },
+    		{name: '未领取' }
+    ],
+
+
+    
+    procedures: [
+    	{name: '已审批已验收'},
+    	{name: '已审批未验收'},
+    	{name: '未审批未验收'}
+    ],
+     records:[
+     	{name:'已备案'},
+     	{name:'未备案'},
+     	{name:'无编制'},
+     ],
+     Choices:[
+     	{name:'是'},
+     	{name:'否'}
+     ],
+     re_town:[],
+     re_community:[],
+     re_address:[],
+     re_longitude:'',
+     re_latitude:[],
+     re_name:[],
+     re_legalRepresentative:[],
+     re_legalRePhone:[],
+     re_envirRepresentative:[],
+     re_envirRePhone:[],
+     re_hasLicence:[],
+     re_uscCode:[],
+     re_envirProcedures:[],
+     re_tradeType:[],
+     re_sewagePermit:[],
+     re_emergencyPlan:[],
+
+  },
+ methods:{
+          postData:function(){
+              //发送 post 请求
+		var storage=window.localStorage;
+		var userid=storage.getItem("userId");
+		var userType=storage.getItem("userType");
+		console.log(userType);
+        let param={userId:userid};
+        let headers={"content-type":"application/json"};
+		//获取镇街
+		let url="https://dgutxm.cn/wuranyuan-server/getAllPollutionTown";
+		this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                       var results=res.body;
+                        //console.log(results);
+                	for(var i=0;i<results.length;i++){
+                		console.log(results[i].toString(i));
+                		this.$data.towns.push({name:results[i].toString(i)});
+                	}
+                    
+                },function(res){
+                    console.log(res.statu);
+                });
+                //第一次获取行业类型
+                url="https://dgutxm.cn/wuranyuan-server/getIndustryTypeFirst";
+				this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                	
+                       var results=res.body;
+                       //console.log(results);
+                	for(var i=0;i<results.length;i++){
+						//console.log(results[i].name);
+                		this.$data.industries1.push({name:results[i].name,type:results[i].type});
+                	}
+                    
+                },function(res){
+                    console.log(res.statu);
+                });
+          },
+          //第二次获取行业类型
+          postindustries2:function(){
+  		  		var storage=window.localStorage;
+           		var userid=storage.getItem("userId");
+  		  		var industries1=document.getElementById("industries1");
+  		  		var theIndustries1;
+  		  		this.$data.industries2=[];
+  		  		for (var i = industries1.length - 1; i >= 0; i--) {
+  		  			if(industries1.options[i].selected==true){
+  		  				
+  		  				theIndustries1=industries1.options[i].value;
+  		  				break;
+  		  			}
+  		  		}
+  		  		let param={condition:theIndustries1,userId:userid};
+  		  		let headers={"content-type":"application/json"};
+  		  		let url="https://dgutxm.cn/wuranyuan-server/getIndustryTypeSecond";
+  		  		//console.log(param);
+  		  		this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                        var results=res.body;
+                        //console.log(results);
+                		for(var i=0;i<results.length;i++){
+						//console.log(results[i].community);
+                		this.$data.industries2.push({name:results[i].name,type:results[i].type});                                  
+                        }
+              		  },function(res){
+                  	  console.log(res.statu);
+       		   });
+           },
+           //第三次获取行业类型
+           postindustries3:function(){
+  		  		var storage=window.localStorage;
+           		var userid=storage.getItem("userId");
+  		  		var industries2=document.getElementById("industries2");
+  		  		var theIndustries2;
+  		  		this.$data.industries3=[];
+  		  		for (var i = industries2.length - 1; i >= 0; i--) {
+  		  			//console.log(industries2.options[i].value);
+  		  			if(industries2.options[i].selected==true){
+  		  				
+  		  				theIndustries2=industries2.options[i].value;
+  		  				break;
+  		  			}
+  		  		}
+  		  		let param={condition:theIndustries2,userId:userid};
+  		  		let headers={"content-type":"application/json"};
+  		  		let url="https://dgutxm.cn/wuranyuan-server/getIndustryTypeThird";
+  		  		//console.log(param);
+  		  		this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                        var results=res.body;
+                        console.log(results);
+                		for(var i=0;i<results.length;i++){
+						//console.log(results[i].community);
+                		this.$data.industries3.push({name:results[i].name,type:results[i].type});                                  
+                        }
+              		  },function(res){
+                  	  console.log(res.statu);
+       		   });
+           },
+           //第四次获取行业类型
+           postindustries4:function(){
+            var storage=window.localStorage;
+              var userid=storage.getItem("userId");
+            var industries3=document.getElementById("industries3");
+            var theIndustries3;
+            this.$data.industries4=[];
+            for (var i = industries3.length - 1; i >= 0; i--) {
+              //console.log(industries3.options[i].value);
+              if(industries3.options[i].selected==true){
+                
+                theIndustries3=industries3.options[i].value;
+                break;
+              }
+            }
+            let param={condition:theIndustries3,userId:userid};
+            let headers={"content-type":"application/json"};
+            let url="https://dgutxm.cn/wuranyuan-server/getIndustryTypeFourth";
+            //console.log(param);
+            this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                        var results=res.body;
+                        console.log(results);
+                    for(var i=0;i<results.length;i++){
+                    this.$data.industries4.push({name:results[i].name,no:results[i].no});                                  
+                        }
+                    },function(res){
+                      console.log(res.statu);
+             });
+           },
+           //获取社区
+          postCommunity:function(){
+  		  		var storage=window.localStorage;
+           		var userid=storage.getItem("userId");
+  		  		var towns=document.getElementById("town");
+  		  		var theTowm;
+  		  		this.$data.communities=[];
+  		  		for (var i = towns.length - 1; i >= 0; i--) {
+  		  			if(towns.options[i].selected==true){
+  		  				
+  		  				theTowm=towns.options[i].value;
+  		  				break;
+  		  			}
+  		  		}
+  		  		let param={condition:theTowm,userId:userid};
+  		  		let headers={"content-type":"application/json"};
+  		  		let url="https://dgutxm.cn/wuranyuan-server/getAllPollutionCommunity";
+  		  		console.log(param);
+  		  		this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                        var results=res.body;
+                		for(var i=0;i<results.length;i++){
+						//console.log(results[i].community);
+                		this.$data.communities.push({name:results[i].community});                                  
+                        }
+              		  },function(res){
+                  	  console.log(res.statu);
+       		   });
+           },
+          /* ,pollutionType:"16",productType:"17",otherProductType:"18",technology:"19",otherTechnology:"20",wastewaterTreatment:"21",waterAcceptComp:"22",exhaustGasType:"23",otherExhaustGasType:"24",wasteGasTreatment:"25",hazardousWasteStorage:"26",hazardousWasteTransfer:"27",hazardousAcceptComp:"28",hazardousStorageSign:"29",problem:"32",treat:"33",inspector1:"34",inspector2:"35",picture1:"36",picture2:"37",picture3:"38",picture4:"39"*/
+          post:function(){
+              //发送 post 请
+             // var form=document.getElementById("enterpriseForm").submit();
+             // var param=JSON.stringify(form);
+             // console.log(param);
+             //获取经纬度
+             var storage=window.localStorage;
+            	var userid=storage.getItem("userId");
+             //var lngAndlat1=document.getElementById("lngAndlat1").value;
+             console.log(lngAndlat1);
+             var lngAndlat2=document.getElementById("lngAndlat2").value;
+             //获取环境应急预案
+             var record=document.getElementById("record");
+             var emergencyPlan="";
+             var USCCodeValue=document.getElementById("USCCodeValue");
+             console.log(USCCodeValue.value);
+             if(USCCodeValue.value=="" || USCCodeValue.value=="无"){ USCCodeValue.value="无";
+             console.log("stop"); console.log(USCCodeValue.value);}
+             //环保手续为无
+             var EnvirProdure="";
+             if(document.getElementById("EnvirProdureOff").checked){
+             	EnvirProdure="无";
+             }else{
+             	EnvirProdure="有，";
+             	var examine=document.getElementById("examine");
+             	for (var i = examine.length - 1; i >= 0; i--) {
+             		if(examine.options[i].selected){
+             		EnvirProdure+=examine.options[i].value;
+             		break;
+             		}
+             	}
+             	
+             }
+             for(var i=0;i<record.length;i++){
+             		if(record.options[i].selected){
+             				if(record.options[i].value=="已备案"){
+             					
+             					var isOut=document.getElementById("isOut");
+             					 for(var j=0;j<isOut.length;j++){
+             					 	 console.log(isOut.options[j].value);
+             					 	if(isOut.options[j].selected) emergencyPlan+=isOut.options[j].value;
+             					 }
+             				}else{
+             					emergencyPlan=record.options[i].value;
+             				}
+             		}
+             }
+              let headers={"Accept":"application/json","content-Type":"application/json"};
+               let url="https://dgutxm.cn/wuranyuan-server/saveCompanyInfo";
+               let param={
+               	town:this.$data.re_town,
+               	community:this.$data.re_community,
+               	address:this.$data.re_address,
+               	longitude:this.$data.re_longitude,
+               	latitude:lngAndlat2,
+               	name:this.$data.re_name,
+               	legalRepresentative:this.$data.re_legalRepresentative,
+               	legalRePhone:this.$data.re_legalRePhone,
+               	envirRepresentative:this.$data.re_envirRepresentative,
+               	envirRePhone:this.$data.re_envirRePhone,
+               	hasLicence:this.$data.re_hasLicence,
+               	uscCode:USCCodeValue.value,
+               	envirProcedures:EnvirProdure,
+               	tradeType:this.$data.re_tradeType,
+               	sewagePermit:this.$data.re_sewagePermit,
+               	emergencyPlan:emergencyPlan,
+               	userId:userid
+               };
+               console.log(param);
+               this.$http.post(url,param,
+                 headers,{emulateJSON:true}
+                 ).then(function(res){
+                         var str=res.body;
+                         if(str.code=="00"){alert("企业信息填写成功！请填写该企业的污染排查表！");
+                         window.location="menu.html";}else{ alert(str.code+","+str.message);}
+                        
+                         
+                 },function(res){
+                   
+                 });
+          }
+      }
+  
+});
+window.onload=vm.postData();
+window.setTimeout(check,500);
+};
+
+</script>
+
+<script src="js/survey.js"></script>
+</body>
+</html>

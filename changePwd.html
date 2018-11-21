@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html >
+<head>
+  <title>环境监管</title> <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+  <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="js/md5.js"></script>
+  <link rel="stylesheet" href="css/changePwd.css">  
+
+</head>
+
+<body>
+    <div class="demo" id="box">
+      <div class="changePwd">
+        <div class="changePwd__check">修改密码</div>
+        <div class="changePwd__form">
+          <div class="changePwd__row">
+            <span>原密码：</span>
+            <input type="text" class="changePwd__oldpwd" placeholder="原密码" v-model="oldPwd"/>
+          </div>
+          <div class="changePwd__row">
+            <span>新密码：</span>
+            <input type="password" class="changePwd__newpwd" placeholder="新密码" v-model="newPwd"/>
+          </div>
+          <div class="changePwd__row">
+            <span>确认密码：</span>
+            <input type="password" class="changePwd__ensure__newpwd" placeholder="确认密码" v-model="rePwd" />
+          </div>
+          <button type="button" class="changePwd__ensure" @click="post()">确定</button>
+          <p class="changePwd__signup">@环保局</p>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+       window.onload=function(){
+        var vm = new Vue({
+          el:"#box",
+          data:{
+              newPwd:[],
+              oldPwd:[],
+              rePwd:[]
+          },
+          methods:{
+              post:function(){
+                var newpasswd=this.$data.newPwd;
+                var repasswd=this.$data.rePwd;
+                if(newpasswd!=repasswd){
+                  alert("确认密码出错，请重新填写！");
+                }else{
+                  var storage=window.localStorage;
+                  var Account=storage.getItem("account");
+                  newpasswd=hex_md5(this.$data.newPwd);
+                  var oldpasswd=hex_md5(this.$data.oldPwd);
+                  let param={account:Account,oldPwd:oldpasswd,newPwd:newpasswd};
+                  let headers={"content-type":"application/json"};
+                  let url="https://dgutxm.cn/wuranyuan-server/updatePwd";
+                  this.$http.post(url,param,
+                      headers,{emulateJSON:true}
+                     ).then(function(res){
+                       var results=res.body;
+                      if(results.code=="00"){
+                        alert("修改密码成功！");
+                        window.location.href="login.html";
+                        storage.clear();
+                      }else{
+                        alert(results.message);
+                      }
+                },function(res){
+                    console.log(res.status);
+                });
+                }
+              }
+            }
+          });
+      }
+    </script>
+</body>
+</html>

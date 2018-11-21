@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html >
+<head>
+  <title>环境监管</title>  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+  <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <link rel="stylesheet" href="css/style.css">  
+</head>
+
+<body>
+    <div class="demo" id="box">
+      <div class="login">
+        <div class="login__logo">
+          <img src="images/logo.png" alt="" class="logo">
+          <div>东莞市工业污染源环境辅助监管信息系统</div>
+        </div>
+        <div class="login__form">
+          <div class="login__row">
+            <svg class="login__icon name svg-icon" viewBox="0 0 20 20">
+              <path d="M0,20 a10,8 0 0,1 20,0z M10,0 a4,4 0 0,1 0,8 a4,4 0 0,1 0,-8" />
+            </svg>
+            <input type="text" class="login__input name" placeholder="用户名" id="name"  autocomplete="off"/>
+          </div>
+          <div class="login__row">
+            <svg class="login__icon pass svg-icon" viewBox="0 0 20 20">
+              <path d="M0,20 20,20 20,8 0,8z M10,13 10,16z M4,8 a6,8 0 0,1 12,0" />
+            </svg>
+            <input type="password" class="login__input pass" placeholder="密码" id="password"  autocomplete="off"/>
+          </div>
+          <button type="button" class="login__submit" @click="post()">登录</button>
+          <p class="login__signup">@环保局</p>
+        </div>
+      </div>
+    </div>
+    <script>
+     window.onload = function(){
+     var vm = new Vue({
+      el:'#box',
+      methods:{
+          post:function(){
+              //发送 post 请求
+             var name=document.getElementById("name");
+             var password=document.getElementById("password");
+                         var hashPassword = hex_md5(password.value);
+             let param={account:name.value,password:hashPassword};
+             let headers={"content-type":"application/json"};
+              let url="https://dgutxm.cn/wuranyuan-server/login";
+              this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                        var str=res.body;
+                        if(str.id==-1){
+                          alert("账号不存在");             
+                        }else if(str.id==-2){
+                          alert("密码错误");
+                        }else if(str.id>0){
+                            var storage=window.localStorage;
+                            storage.setItem("userId",str.id);  //暂存用户Id
+                            storage.setItem("userType",str.userType.name); //暂存用户类型信息
+                            storage.setItem("userArea",str.area); //暂存用户类型信息
+                            storage.setItem("account",str.account);
+                            window.location.href="menu.html";//打开下一个页面
+                        }
+                },function(res){
+                    console.log(res.status);
+                });
+          }
+      }
+  });
+}
+    </script>
+    <script type="text/javascript" src="js/md5.js"></script>
+</body>
+</html>

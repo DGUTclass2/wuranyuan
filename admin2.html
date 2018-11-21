@@ -1,0 +1,411 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>环境监管</title>
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<link rel="stylesheet" href="css/survey.css">
+</head>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div class="pullution_nav">
+		污染源信息
+	</div>
+	<div id="app">
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>污染源编号:</span>
+					<input type="text" id="pollutionNo" value="ssg松山湖123" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>排查人员1:</span>
+					<input type="text" id="cPerson1" value="" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>排查人员2:</span>
+					<input type="text" id="cPerson2" value="" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>排查日期:</span>
+					<input type="date" id="pollutionNo" value="">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>核查人员:</span>
+					<input type="text" id="cPerson2" value="" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>核实日期:</span>
+					<input type="date" id="" value="">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>核实责任人1:</span>
+					<input type="text" id="" value="" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>核实责任人2:</span>
+					<input type="text" id="" value="" class="surveyInput">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>核实日期:</span>
+					<input type="date" id="" value="">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>建议整改时期:</span>
+					<input type="date" id="" value="">
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>建议整改措施:</span>
+					<label for=""><input type="radio" id="" value="" class="surveyRadio">是</label>
+					<label for=""><input type="radio" id="" value="" class="surveyRadio">否</label>
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>是否完成整改:</span>
+					<label for=""><input type="radio" id="" value="" class="surveyRadio">是</label>
+					<label for=""><input type="radio" id="" value="" class="surveyRadio">否</label>
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+			<div class="surveyItem">
+				<div class="surveyLocation">
+					<span>整改情况:</span>
+					<textarea rows="5" class="surveyText"></textarea>
+					<!-- <div id="lngAndlat"></div> -->
+				</div>
+			</div>
+
+	<div style="height: 30px;"></div>
+	<div class="pullution_nav">
+		填写污染源	
+	</div>
+	<div class="body">
+		<form action="">
+		<div class="pullutionMitem">
+			<div class="pullution_title" onclick="Item_toggle(200,'item1')">
+				污染源类型<span id="item1Span"></span>
+			</div>
+			<div id="item1"  class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item1_in" name="" id="noInvolve" value="不涉及"><label for="noInvolve">不涉及</label>
+				</div>
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item1_in"  name="" value="涉水" id="noInvolveWater"><label for="noInvolveWater">涉水</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item1_in"  name="" value="涉气" id="noInvolveGas">涉气</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item1_in"  name="" value="涉噪音">涉噪音</label>
+				</div>
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item1_in"  name="" value="涉危废" id="noInvolveDanger"><label for="noInvolveDanger">涉危废</label>
+				</div>
+			</div>
+		</div>
+		<div class="pullutionMitem" >
+			<div class="pullution_title" onclick="Item_toggle(380,'item2')">产品类型（可多选）<span id="item2Span"></span></div>
+			<div id="item2" class="hidden_item">
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">塑胶</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">五金</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">线路板</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">电子零件</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">陶瓷</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">玻璃</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">纸品</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">纺织物</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">石材</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">食品</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">木器</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">化肥</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">化学品</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">制药</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in">汽修</label></div>
+				<div class="pullutionMchild"><label><input type="checkbox"  class="item2_in" value="其他">其他</label>
+				<input type="text" id="item2_input">
+				</div>
+			</div>
+		</div>
+		<div class="pullutionMitem">
+			<div class="pullution_title" onclick="Item_toggle(380,'item3')">主要生产工艺（可多选)<span id="item3Span"></span></div>
+			<div id="item3"  class="hidden_item">
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">酸化</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">除油</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">喷漆</label>
+				</div>
+				<div class="pullutionMchild">
+					<label"><input type="checkbox" class="item3_in">研磨</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">电镀</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">氧化</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">印染</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">电泳</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">水洗</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">钝化</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">磷化</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">印刷</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">丝印</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">蚀刻</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">超声波清理</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">洗桶</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">洗版</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">印移</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in">食品清理</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item3_in" value="其他">其他：</label>
+					<input type="text" id="item3_input">
+				</div>
+			</div>
+		</div>
+		 	<div class="pullutionMitem itemHidden" id="item4_div">
+		<div class="pullution_title " onclick="Item_toggle(150,'item4')" >废水处理情况：<span id="item4Span"></span></div>
+		<div id="item4"  class="hidden_item">
+			<div class="pullutionMchild">
+				<input type="checkbox" class="item4_in" value="无" hidden checked>
+				<label><input type="checkbox" class="item4_in">自建污水处理设施</label>
+			</div>
+			<div  class="pullutionMchild">
+				<label><input type="checkbox" class="item4_in" value="转移处理">转移处理</label>
+				<div>
+					<span>接收单位：</span><input type="text" id="item4_input">
+				</div>
+			</div>
+			<div class="pullutionMchild">
+				<label> <input type="checkbox" class="item4_in">未处理直接排放</label>
+			</div>
+		</div>
+		</div>
+		 <div class="pullutionMitem itemHidden" id="item5_div">
+			<div class="pullution_title" onclick="Item_toggle(220,'item5')">
+				废气类型（可多选）<span id="item5Span"></span>
+			</div>
+			<div id="item5" class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item5_in" value="无" hidden checked>
+					<label><input type="checkbox" class="item5_in">VOCs</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item5_in">粉尘废气</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item5_in">锅炉废气</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item5_in">异味</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item5_in" value="其他">其他：</label>
+					<input type="text" id="item5_input">
+				</div>
+			</div>
+		</div> 
+		<div class="pullutionMitem itemHidden" id="item6_div">
+			<div class="pullution_title" onclick="Item_toggle(140,'item6')" >
+				废气处理情况<span id="item6Span"></span>
+			</div>
+			<div id="item6" class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item6_in" value="无" hidden checked>
+					<label><input type="radio" name="feiqi" class="item6_in">未处理直接排放</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="radio" name="feiqi" class="item6_in">经处理后排放</label>
+			</div>
+		</div>
+		</div>
+		<div class="pullutionMitem itemHidden" id="item7_div">
+			<div class="pullution_title" onclick="Item_toggle(120,'item7')">
+				危险废物贮存情况<span id="item7Span"></span>
+			</div>
+			<div id="item7" class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item7_in" value="无" hidden checked>
+					<label><input type="radio" name="guifan" class="item7_in">不规范</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="radio" name="guifan" class="item7_in">规范</label>
+				</div>
+			</div>
+		</div>
+		<div class="pullutionMitem itemHidden" id="item8_div">
+			<div class="pullution_title" onclick="Item_toggle(120,'item8')">
+				危险废物合同签订<span id="item8Span"></span>
+			</div>
+			<div id="item8" class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item8_in" value="无" hidden checked>
+					<label><input type="radio" name="turn" class="item8_in" value="已签订">已签订</label>
+					<div>
+						<span id="item8ChildSpan"></span><span>是否过期：</span>
+						<label><input type="radio" name="guoqi" class="item8_in_radio">是</label>
+						<label><input type="radio" name="guoqi" class="item8_in_radio">否</label>
+					</div>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="radio" name="turn" class="item8_in">未签订</label>
+				</div>
+			</div>
+		</div>
+		<div class="pullutionMitem itemHidden" id="item9_div">
+			<div class="pullution_title" onclick="Item_toggle(140,'item9')">
+				危险废物转移情况<span id="item9Span"></span>
+			</div>
+			<div id="item9" class="hidden_item">
+				<div class="pullutionMchild">
+					<input type="checkbox" class="item9_in" value="无" hidden checked>
+					<label><input type="radio" name="turn" class="item9_in">规范</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="radio" name="turn" class="item9_in" value="不规范">不规范</label>
+					<div>
+						<span id="item9ChildSpan"></span>
+						<span>接收单位：</span>
+						<input type="text" id="item9_input">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="pullutionMitem">
+			<div class="pullution_title" onclick="Item_toggle(160,'item10')">
+				处理情况（可多选）<span id="item10Span"></span>
+			</div>
+			<div id="item10" class="hidden_item">
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item10_in">上报整改</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item10_in">跟踪整改</label>
+				</div>
+				<div class="pullutionMchild">
+					<label><input type="checkbox" class="item10_in">不需整改</label>
+				</div>
+				<div class="pullution_textarea" id="zhenggai_textarea">
+					<textarea name="" id="" cols="40" rows="5"  placeholder="存在问题和处理建议"></textarea>
+				</div>
+			</div>
+		</div>
+		<div style="height: 30px;"></div>
+		<div class="surveyItem" >
+			<p><span class="red">*</span>排查阶段现场照片：</p>
+			<input type="file" id="fieldFile1" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+			<input type="file" id="fieldFile2" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+			<input type="file" id="fieldFile3" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+			<input type="file" id="fieldFile4" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+			<input type="file" id="fieldFile5" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view5" class="fieldImage"></div>
+		</div>
+		<div style="height: 30px;"></div>
+		<div class="surveyItem" >
+			<p><span class="red">*</span>整治阶段现场照片：</p>
+			<input type="file" id="fieldFile1" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+			<input type="file" id="fieldFile2" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+			<input type="file" id="fieldFile3" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+			<input type="file" id="fieldFile4" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+			<input type="file" id="fieldFile5" class="surveyInput" accept="image/*"><br>
+			<div style="text-align: center;"><img src="" alt="" id="view5" class="fieldImage"></div>
+		</div>
+		<div class="pullution_button" id="pollutionSubmit">
+			提交
+		</div>
+		</form>
+		<div style="height: 100px;"></div>
+	</div>
+	</div>
+	<script>
+		new Vue({
+  el: '#app',
+  data: {
+    sites: [
+      { name: '大岭山山大岭山山大岭山山大岭山山大岭山山' },
+      { name: '松山湖' },
+      { name: '大朗镇' },
+      { name: '樟木头镇' },
+      { name: '桥头镇' },
+      { name: '石排镇' }
+    ],
+    }
+})
+	</script>
+	<script src="js/pollution.js"></script>
+</body>
+</html>

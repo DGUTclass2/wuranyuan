@@ -1,0 +1,242 @@
+*{
+		   font-size: 16px;
+	 	   padding: 0;
+	 	   margin: 0;
+		}
+		.surveyBar{
+			background-color: #489ce2;
+/* 			margin-bottom: 10px; */
+			width: 100%;
+			height: 60px;
+			color: #ffffff;
+			display: flex;
+			flex-direction:column;
+			justify-content:center;
+			align-items: center;
+		}
+		.surveyForm{
+			display: flex;
+			flex-direction:column;
+			justify-content:space-around;
+			align-items: center;
+
+		}
+		.surveyItem{
+			margin:0 30px;
+			padding: 10px 0;
+			border-bottom: 1px solid #dadada;
+		}
+		.spanTag{
+			width: 35px;
+		}
+		.surveyInput{
+			width: 97%;
+			height: 25px;
+			margin: 10px 0;
+			border-radius:3px;
+			border: 1px solid gray;
+			padding:5px;
+			outline:medium;
+		}
+		.surveyLocation{
+			margin:10px 0;
+			text-align: center;
+		}
+		.surveyButton{
+			margin:15px auto;
+			border: 1px solid gray;
+			height: 20px;
+			width:70%;
+			padding:5px;
+			text-align: center;
+			border-radius: 4px;
+			color: #ffffff;
+			background-color: #489ce2;
+		}
+		.surveyTip{
+			font-size: 14px;
+			margin-top: 3px;
+			color: rgba(255, 25, 8, 0.9);
+		}
+		.surveyRadio{
+			width: 20px;
+			height: 20px;
+			vertical-align:text-bottom;
+			margin-left: 15px;
+		}
+		.itemHidden{
+			width:100%;
+			display:none;
+			
+		}
+		.red{
+			margin:0 3px;
+			color: red;
+		}
+		.surveySelect{
+			height: 40px;
+			width: 100%;
+			margin: 10px 0;
+		}
+		.surveyText{
+			width: 100%;
+		}
+		.surveyBarLogo{
+			width: 35px;
+			height:35px;
+			display: inline;
+			vertical-align:middle;
+		}
+		.lngAndlat{
+			border:none;
+			width: 100%;
+			height: 25px;
+			text-align: center;
+		}
+		.surveyOption{
+			width: 100%;
+			height: 60px;
+			border-bottom: 1px solid #dadada;
+			display: flex;
+			flex-direction:column;
+			justify-content:center;
+			align-items: center;		
+		}
+		.menuIcon{
+			width: 28px;
+			height: 28px;
+			display: inline;
+			vertical-align: text-bottom;
+			margin:0 5px;
+		}
+		.body{
+			margin: 8px;
+		}
+		.select_hidden{
+			width: 100%;
+		}
+		.pullutionBar{
+			background-color: #489ce2;
+			
+			width: 100%;
+			height: 60px;
+		}
+		.pullutionMitem{
+			border: 1px solid  rgb(75, 118, 171);;
+			margin-bottom: 10px; 	
+		}
+		.pullution_title{
+			border-bottom:1px solid rgb(75, 118, 171);
+			color: rgb(5, 78, 168);
+			padding: 8px;
+		}
+		.pullutionMchild{
+			/*margin:0 15px;*/
+			margin-left: 24px;
+			/*border-bottom: 1px solid gray;*/
+			padding: 5px;
+			/*padding: 15px; */
+			margin-bottom: 10px;
+		}
+		.hidden_item{
+			/*transition: height 1s;
+			-webkit-transition: height 1s;
+			overflow:auto;*/
+			display: flex;
+			flex-wrap:wrap;
+		}
+		/* .CheckBoxitem{
+			margin-right: 5px;
+			zoom:130%;
+			font-size: 1em;
+		} */
+		.pullution_button{
+			color: white;
+			background-color:#489ce2;
+			width:250px;
+			padding: 8px 0; 
+			border-radius: 5px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		.pollutionItem{
+			margin:0 20px;
+			padding: 10px 0;
+			display: flex;
+			justify-content: flex-start;
+		}
+		.pollutionSelect{
+			height: 30px;
+			width:220px;
+		}
+		.pulltionspan{
+			width:85px;
+			text-align: right;
+			padding: 5px;
+		}
+		.red{
+			color: red;
+		}
+		.pullution_nav{
+			background-color: #82afdc;
+			text-align: center;
+			color: white;
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+		.pullution_textarea{
+			width: 100%;
+			margin:0 15px;
+			margin-left: 20px;
+			padding: 5px;
+			display: flex;
+			flex-wrap:wrap;
+			justify-content:center;
+			/*display: none;*/
+		}
+		.pullution_textarea textarea{
+			width: 100%;
+		}
+		.fieldImage{
+			width: 150px;
+			height: 150px;
+		}
+		.problemTip{
+			margin:10px 7px 0 0;
+			padding:3px;
+			width: 120px;
+			height: 20px;
+			vertical-align: middle;
+			text-align: center;
+			font-size: 10px;
+			background-color:#DBDCDF;
+		}
+		.gasRadio{
+			width: 20px;
+			height: 20px;
+			vertical-align:text-bottom;
+			margin-right: 5px;
+		}
+		.gasType{
+			width: 92px;height: 22px;
+			display: inline-block;
+			margin-right: 30px;
+		}
+		.fileItem{
+
+		}
+		.fileUpload{
+			margin: 10px 0;
+			width: 70%;
+		}
+		.synchronization{
+			width: 130px;
+			height: 25px;
+
+			border:1px solid gray;
+			text-align: center;
+			display: inline-block;
+			color: #ffffff;
+			background-color: #489ce2;
+			border-radius: 6px;
+		}

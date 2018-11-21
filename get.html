@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>获取接口数据</title>
+	<script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+</head>
+<body>
+	<div id="app">
+    <form id="picForm" method="post" enctype="multipart/form-data" action="https://dgutxm.cn/wuranyuan-server/uploadPic">
+          <p><span class="red">*</span>现场照片：</p>
+          <p >1、厂门口照片（必须上传）：</p>
+          <input type="file" name="imageList" id="fieldFile1" class="surveyInput" accept="image/*" ><br>
+          <div style="text-align: center;"><img src="" alt="" id="view1" class="fieldImage"></div>
+          <p >2、污染工艺照片：</p>
+          <input type="file" name="imageList" id="fieldFile2" class="surveyInput" accept="image/*" ><br>
+          <div style="text-align: center;"><img src="" alt="" id="view2" class="fieldImage"></div>
+          <p >3、污染防治设施照片：</p>
+          <input type="file" name="imageList" id="fieldFile3" class="surveyInput" accept="image/*" ><br>
+          <div style="text-align: center;"><img src="" alt="" id="view3" class="fieldImage"></div>
+          <p>4、排放口照片：</p>
+          <input type="file" name="imageList" id="fieldFile4" class="surveyInput" accept="image/*" ><br>
+          <div style="text-align: center;"><img src="" alt="" id="view4" class="fieldImage"></div>
+        </form>
+    <button @click="postPic()">点击</button></div>
+	<script>
+     window.onload = function(){
+     var vm = new Vue({
+      el:'#app',
+      methods:{
+          post:function(){
+              //发送 post 请求
+console.log("123");
+//let param={account:"罗刚",password:"c86038fe04bc7097e218b4fd6b767f4b"};
+//let param={userId:1};
+//let param={userId:5,step:false};
+             let headers={"content-type":"application/json"};
+              let url="https://dgutxm.cn/wuranyuan-server/login";
+		          this.$http.post(url,param,
+                headers,{emulateJSON:true}
+                ).then(function(res){
+                       var results=res.body;
+                	console.log(results);
+                        
+                },function(res){
+                    console.log(res.statu);
+                });
+          },
+                      //获取照片函数
+              postPic:function(){
+    
+                var flag=true;
+                var form = document.getElementById("picForm");
+          var imageList = new FormData(form);
+          var arr=document.getElementsByName("imageList");
+          // for(var i=0;i<arr.length;i++){
+          //  var size=arr[i].files[0].size;
+          //  console.log(arr[i].files[0].size);
+          //  if(size>(5*1024*1024)){
+          //    alert("图片过大，请重新上传");
+          //    flag=false;
+          //    break;
+          //    }
+            
+          // }
+          if(flag){
+            let headers={"content-type":"multipart/form-data"};
+                  let url="https://dgutxm.cn/wuranyuan-server/uploadPic";
+                  this.$http.post(url,imageList,
+                    headers,{emulateJSON:true}
+                    ).then(function(res){
+                      var results=res.body;
+                      console.log(results);
+            },function(res){
+              console.log(res.status);
+            });
+          }
+  
+                },
+      }
+  });
+}
+    </script>
+</body>
+</html>

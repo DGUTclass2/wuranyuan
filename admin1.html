@@ -1,0 +1,204 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,inital-scale=2.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Gm7uy71EWAxRo2qhcaBPGl7tKoVv9eXR"></script> 
+	<title>环境监管</title>
+	<link rel="stylesheet" href="css/survey.css">
+</head>
+<body>
+	<div class="surveyBar">
+		<div>
+			<img src="images/logo.png" alt="logo" class="surveyBarLogo">
+			<span>东莞市工业污染源环境辅助监管信息系统</span>
+		</div>
+	</div>
+	<div class="surveyForm" id="app">
+		<form action="" id="enterpriseForm">
+			<div class="surveyItem">
+						<span class="red">*</span>镇街
+						<select name="" id="" class="surveySelect">
+							<option value="">---</option>
+							<option value=" " v-for="site in sites">{{site.name}}</option>
+						</select>
+			</div>
+			<div class="surveyItem">
+						<span class="red">*</span>村/社区
+						<select name="" id="" class="surveySelect">
+							<option value="">---</option>
+							<option value=" " v-for="site in sites">{{site.name}}</option>
+						</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>公司名称：
+				<select name="" id="" class="surveySelect">
+					<option value="">---</option>	
+					<option value=" " v-for="tag in tags">{{tag.name}}</option>
+				</select>
+			</div>
+			<div class="pullution_nav">核查信息</div>
+			<div class="surveyItem">
+				<span class="red">*</span>标签：
+				<select name="" id="" class="surveySelect">
+					<option value="">---</option>	
+					<option value=" " v-for="tag in tags">{{tag.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>地址
+				<input type="text" class="surveyInput" id="address">
+				<span id="addressSpan" class="surveyTip"></span><br>
+			</div>
+			<div class="surveyItem">			
+					<span class="red">*</span>经纬度
+					<input type="text" class="surveyInput" id="lngAndlat">
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>法定代表人/经管者:
+				<input type="text" placeholder="姓名" class="surveyInput" name="" id="leReName">
+				<span class="surveyTip" id="leReNameSpan"></span><br>
+				<input type="text" placeholder="联系电话" class="surveyInput" name="" id="leReIpone">
+				<span class="surveyTip" id="leReIponeSpan"></span><br>
+				
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环保负责人:
+				<input type="text" placeholder="姓名" class="surveyInput" name="" id="enReName">
+				<span class="surveyTip" id="enReNameSpan"></span><br>
+				<input type="text" placeholder="联系电话" class="surveyInput" name="" id="enReIpone">
+				<span class="surveyTip" id="enReIponeSpan"></span><br>
+				
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>营业执照:
+				<input type="radio" name="BusiLicense" class="surveyRadio BusiLicense" id="LicenseOff" value="无">无 
+				<input type="radio" name="BusiLicense" class="surveyRadio BusiLicense" id="LicenseOn" value="有">有
+				<div id="USCCode" class="itemHidden">
+					<input type="text" name="" placeholder="统一社会信用代码" class="surveyInput" id="USCCodeValue">
+					<span class="surveyTip" id="USCCodeValueSpan"></span><br>
+					<span class="surveyTip">如：91440106732959639W</span>
+				</div>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环保手续:
+				<input type="radio" name=" " class="surveyRadio EnvirProdure" id="EnvirProdureOff" value="无" >无 
+				<input type="radio" name=" " class="surveyRadio EnvirProdure" id="EnvirProdureOn" value="有">有
+				<select name="" id="examine" class="surveySelect itemHidden" >
+					<option value="" >---</option>
+					<option hidden="hidden" value="无">无</option>
+					<option value=" " v-for="procedure in procedures">{{procedure.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>行业类型：
+				<span>
+					<select name="" id="" class="surveySelect">
+						<option value="">---</option>
+						<option value=" " v-for="industry in industries">{{industry.name}}</option>
+					</select>
+				</span>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>排污许可证：
+				<select name="" id="" class="surveySelect">
+					<option value="">---</option>
+					<option value=" " v-for="approval in approvals">{{approval.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem">
+				<span class="red">*</span>环境应急预案：
+				<select name="" id="record" class="surveySelect">
+					<option value="">---</option>
+					<option value=" " v-for="record in records">{{record.name}}</option>
+				</select>
+				<select name="" id="Choice" class="surveySelect itemHidden">
+					<option value="">---</option>
+					<option hidden="hidden" value="无">无</option>
+					<option value=" " v-for="Choice in Choices">{{Choice.name}}</option>
+				</select>
+			</div>
+			<div class="surveyItem" >
+				<div class="surveyLocation">
+					<div class="surveyButton" id="surveySubmit" onclick="window.location='admin2.html'">下一页</div>
+				</div>
+			</div>
+
+		</form>
+		<div style="height: 100px;"></div>
+	</div>
+
+
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    sites: [
+      { name: '大岭山山' },
+      { name: '松山湖' },
+      { name: '大朗镇' },
+      { name: '樟木头镇' },
+      { name: '桥头镇' },
+      { name: '石排镇' }
+    ],
+    tags:[
+    	{name: '泗盛断面' },
+    	{name: '东城主山站区域' },
+    	{name: '华为欧洲小镇及湖畔花园区域' }
+    ],
+    approvals:[
+    		{name: '已领取国家排污许可证' },
+    		{name: '已领取省排污许可证' },
+    		{name: '未领取' }
+    ],
+    procedures: [
+    	{name: '已审批已验收'},
+    	{name: '已审批未验收'},
+    	{name: '未审批未验收'}
+    ],
+    industries: [
+    	{name: '衣服制造类'},
+    	{name: '电子制造类'},
+    	{name: '工业金属'},
+    ],
+    pollutions: [
+    	{name: '不涉及'},
+    	{name: '涉水'},
+    	{name: '涉气'},
+    	{name: '涉噪音'},
+    	{name: '涉危废'},
+    ],
+     records:[
+     	{name:'已备案'},
+     	{name:'未备案'},
+     	{name:'无编制'},
+     ],
+     Choices:[
+     	{name:'是'},
+     	{name:'否'}
+     ],
+     Treatments:[
+     	{name:'上报执法'},
+     	{name:'跟踪整改'},
+     	{name:'不需处理'},
+     ],
+     wWaters:[
+	     {name:'自建污水处理设施'},
+	     {name:'转移处理'},
+	     {name:'未处理直接排放'}
+     ],
+     wGases:[
+	     {name:'VOCs'},
+	     {name:'粉尘废气'},
+	     {name:'锅炉废气'},
+	     {name:'异味'}
+     ]
+  }
+});
+
+
+</script>
+	<script src="js/survey.js"></script>
+</body>
+</html>
